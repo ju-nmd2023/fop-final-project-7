@@ -2,13 +2,19 @@ function setup() {
   rectMode(CENTER);
 }
 function draw() {
+  const w = width / 12;
+  const h = width / 8;
   for (let i = 0; i < 3; i++) {
-    const x = width / 2 - (width / 5) * i;
-    const y = height / 2;
-    const w = width / 5;
-    const h = width / 10;
-    createClickArea(x, y, w, h);
-    console.log(width);
+    const y = 0 + (h + 25) * i;
+    for (let i = 0; i < 5; i++) {
+      const x = 0 + (w + 25) * i;
+      createClickArea(x, y, w, h);
+      push();
+      translate(width / 4, height / 4);
+      drawTestRectangle(x, y, w, h);
+      pop();
+      console.log(width);
+    }
   }
 }
 
@@ -29,5 +35,8 @@ function createClickArea(x, y, w, h) {
     //red if user clicks
     fill(255, 0, 0);
   }
+}
+
+function drawTestRectangle(x, y, w, h) {
   rect(x, y, w, h);
 }
