@@ -2,10 +2,11 @@ let gamestate = "start";
 
 function setup() {
   rectMode(CENTER);
+  ellipseMode(CENTER);
+  noStroke();
 }
 function draw() {
-  background(0);
-
+  background(143, 170, 244);
   switch (gamestate) {
     case "start":
       translate(width / 4, height / 4);
@@ -30,12 +31,26 @@ function draw() {
 function drawHand() {
   fill(255);
   noCursor();
-  ellipse(mouseX, mouseY, width / 12);
+  ellipse(mouseX, mouseY, width / 17);
   if (mouseIsPressed) {
     fill(255, 0, 0);
-    ellipse(mouseX, mouseY, width / 12, width / 24);
+    ellipse(mouseX, mouseY, width / 17, width / 34);
   }
 }
+
+//progress notes
+
+//make the coordinates into classes
+//more than having 16 boxes
+
+//hostile boxes
+// power ups
+// more code complexity
+// stronger enemy click multiple times
+//animate popup, add time window to click
+//boss mode
+//graphics last, use images
+//might remove excessive comments
 
 function drawHitBoxes() {
   const w = width / 12;
