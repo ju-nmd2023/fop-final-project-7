@@ -5,6 +5,7 @@ function setup() {
 }
 function draw() {
   background(0);
+
   switch (gamestate) {
     case "start":
       translate(width / 4, height / 4);
@@ -13,8 +14,11 @@ function draw() {
       }
       break;
     case "game":
+      push();
       translate(width / 4, height / 4);
       drawHitBoxes();
+      pop();
+      drawHand();
       break;
   }
 }
@@ -23,6 +27,16 @@ function draw() {
 
 // }
 
+function drawHand() {
+  fill(255);
+  noCursor();
+  ellipse(mouseX, mouseY, width / 12);
+  if (mouseIsPressed) {
+    fill(255, 0, 0);
+    ellipse(mouseX, mouseY, width / 12, width / 24);
+  }
+}
+
 function drawHitBoxes() {
   const w = width / 12;
   const h = width / 8;
@@ -30,7 +44,6 @@ function drawHitBoxes() {
     const y = 0 + (h + 25) * i;
     for (let i = 0; i < 5; i++) {
       const x = 0 + (w + 25) * i;
-
       createClickArea(x, y, w, h);
     }
   }
@@ -49,8 +62,9 @@ function createClickArea(x, y, w, h) {
     mouseIsPressed == true
   ) {
     //red if user clicks
-    fill(255, 0, 0);
+
     console.log("mega kill!!!");
+    fill(255, 0, 0);
     return true;
   }
   drawTestRectangle(x, y, w, h);
