@@ -1,4 +1,4 @@
-let gameState = "start";
+let gameState = "game";
 let centerX = 0;
 let centerY = 0;
 
@@ -12,7 +12,7 @@ let units = [
   unitTypes[0],
   unitTypes[1],
   unitTypes[2],
-  unitTypes[0],
+  unitTypes[1],
   unitTypes[1],
   unitTypes[2],
   unitTypes[0],
@@ -21,7 +21,7 @@ let units = [
   unitTypes[0],
   unitTypes[1],
   unitTypes[2],
-  unitTypes[0],
+  unitTypes[2],
   unitTypes[1],
   unitTypes[2],
   unitTypes[0],
@@ -65,10 +65,10 @@ function drawHitBox(position, unit) {
   const col = Math.floor(position / 3);
   const x = (w + 25) * col;
   const y = (w + 50) * row;
-  createClickArea(x, y, w, h, unit);
+  createClickArea(x, y, w, h, unit, position);
 }
 
-function createClickArea(x, y, w, h, unit) {
+function createClickArea(x, y, w, h, unit, position) {
   let hue = unit;
 
   let xFix = mouseX - centerX;
@@ -84,12 +84,16 @@ function createClickArea(x, y, w, h, unit) {
 
     console.log("mega kill!!!");
     hue = [255];
-    return true;
+    unitClick(unit, position);
   }
   push();
   translate(centerX, centerY);
   drawTestRectangle(x, y, w, h, hue);
   pop();
+}
+
+function unitClick(unit, position) {
+  units[position] = "";
 }
 
 function drawHand() {
