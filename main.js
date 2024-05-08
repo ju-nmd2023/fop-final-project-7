@@ -27,7 +27,7 @@ function draw() {
 }
 
 function populateField() {
-  for (let i = 0; i < 15; i++) {
+  for (let i = 0; i < 15; i++) { //it is a for loop that runs 15 times, one is at 0.
     let rng = Math.random() * 10;
     switch (rng) {
       case 1:
@@ -45,7 +45,7 @@ function populateField() {
         drawUnit(i, unitTypes[0]);
         break;
     }
-    i++;
+
   }
 }
 
