@@ -53,7 +53,7 @@ function draw() {
 }
 
 function drawPlayingField() {
-  for (let i = 0; i < 15; i++) {
+  for (let i = 0; i < 15; i++) { // it is a for loop that runs 15 times, 0 counts as one time.
     drawHitBox(i, units[i]);
   }
 }
