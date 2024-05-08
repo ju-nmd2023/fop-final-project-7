@@ -1,158 +1,78 @@
-let gamestate = "game";
-//All squares on the field, in order.
-let unitTypes = ["143, 170, 244", "0, 0, 255", "0, 255, 0", "255, 0, 0"];
+let gameState = "start";
+let centerX = 0;
+let centerY = 0;
+
+let unitTypes = [
+  [255, 0, 0],
+  [255, 255, 0],
+  [255, 0, 255],
+];
+// let units = [];
+let units = [
+  unitTypes[0],
+  unitTypes[1],
+  unitTypes[2],
+  unitTypes[0],
+  unitTypes[1],
+  unitTypes[2],
+  unitTypes[0],
+  unitTypes[1],
+  unitTypes[2],
+  unitTypes[0],
+  unitTypes[1],
+  unitTypes[2],
+  unitTypes[0],
+  unitTypes[1],
+  unitTypes[2],
+  unitTypes[0],
+  unitTypes[1],
+];
 
 function setup() {
   rectMode(CENTER);
   ellipseMode(CENTER);
-  noStroke();
 }
+
 function draw() {
   background(143, 170, 244);
-  switch (gamestate) {
+
+  switch (gameState) {
     case "start":
-      translate(width / 4, height / 4);
-      if (createClickArea(width / 4, height / 4, 200, 75)) {
-        gamestate = "game";
+      if (createClickArea(width / 2, height / 2, 200, 75, 255)) {
+        gameState = "game";
       }
       break;
     case "game":
-      push();
-      translate(width / 4, height / 4);
-      populateField();
-      pop();
-      drawHand();
+      //necessary to center and calibrate click
+      centerX = (5 * (width / 12) + 25 * 3) / 2;
+      centerY = (5 * (width / 8) + 50 * 2) / 2;
+      drawPlayingField();
       break;
   }
+  drawHand();
 }
 
-function populateField() {
-  for (let i = 0; i < 15; i++) { //it is a for loop that runs 15 times, one is at 0.
-    let rng = Math.random() * 10;
-    switch (rng) {
-      case 1:
-        drawUnit(i, unitTypes[1]);
-        break;
-      case 2:
-      case 3:
-        drawUnit(i, unitTypes[2]);
-        break;
-      case 4:
-      case 5:
-        drawUnit(i, unitTypes[3]);
-        break;
-      default:
-        drawUnit(i, unitTypes[0]);
-        break;
-    }
-
+function drawPlayingField() {
+  for (let i = 0; i < 15; i++) {
+    drawHitBox(i, units[i]);
   }
 }
 
-function drawUnit(square, type) {
-  drawHitBox(square, type);
-}
-
-function drawHand() {
-  fill(255);
-  noCursor();
-  ellipse(mouseX, mouseY, width / 17);
-  if (mouseIsPressed) {
-    fill(255, 0, 0);
-    ellipse(mouseX, mouseY, width / 17, width / 34);
-  }
-}
-
-//progress notes
-
-//make the coordinates into classes
-//more than having 16 boxes
-
-//hostile boxes
-// power ups
-// more code complexity
-// stronger enemy click multiple times
-//animate popup, add time window to click
-//boss mode
-//graphics last, use images
-//might remove excessive comments
-
-function drawHitBoxes() {
+function drawHitBox(position, unit) {
   const w = width / 12;
   const h = width / 8;
-  for (let i = 0; i < 3; i++) {
-    const y = 0 + (h + 25) * i;
-    for (let i = 0; i < 5; i++) {
-      const x = 0 + (w + 25) * i;
-      createClickArea(x, y, w, h);
-    }
-  }
-}
-
-function drawHitBox(square, type) {
-  const w = width / 12;
-  const h = width / 8;
-  const row = square % 3;
-  const col = Math.floor(square / 3);
+  const row = position % 3;
+  const col = Math.floor(position / 3);
   const x = (w + 25) * col;
   const y = (w + 50) * row;
-createClickArea(x,y,w,h,type);
+  createClickArea(x, y, w, h, unit);
 }
 
-//create enemies at random, pop up once, dissappear forever replaced by new enemy.
-function generateEnemyOrFriend() {
-  //foes or enemies
-  const foeWeak = {
-    health: 1,
-    foe: true,
-    lifeTime: 25,
-    timeChange: -4,
-    points: 0,
-  };
-  const foeRich = {
-    health: 1,
-    foe: true,
-    lifeTime: 10,
-    timeChange: -4,
-    points: 100,
-  };
-  const foeStrong = {
-    health: 5,
-    foe: true,
-    lifeTime: 30,
-    timeChange: -15,
-    points: 0,
-  };
+function createClickArea(x, y, w, h, unit) {
+  let hue = unit;
 
-  //Friends / mice bunnies etc
-  const friendWeak = {
-    health: 1,
-    foe: true,
-    lifeTime: 25,
-    timeChange: -4,
-    points: 0,
-  };
-  const friendRich = {
-    health: 1,
-    foe: true,
-    lifeTime: 10,
-    timeChange: -4,
-    points: 100,
-  };
-  const friendStrong = {
-    health: 5,
-    foe: true,
-    lifeTime: 30,
-    timeChange: -15,
-    points: 0,
-  };
-}
-
-function createClickArea(x, y, w, h, type) {
-  let hue = type;
-  fill(0, 255, 0);
-  let xFix = mouseX - width / 4;
-  let yFix = mouseY - height / 4;
+  let xFix = mouseX - centerX;
+  let yFix = mouseY - centerY;
   if (
     xFix >= x - w / 2 &&
     xFix <= x + w / 2 &&
@@ -163,10 +83,22 @@ function createClickArea(x, y, w, h, type) {
     //red if user clicks
 
     console.log("mega kill!!!");
-    hue = [255, 0, 0];
-    // return true;
+    hue = [255];
+    return true;
   }
+  push();
+  translate(centerX, centerY);
   drawTestRectangle(x, y, w, h, hue);
+  pop();
+}
+
+function drawHand() {
+  fill(255);
+  noCursor();
+  if (mouseIsPressed) {
+    fill(255, 0, 0);
+  }
+  ellipse(mouseX, mouseY, width / 17);
 }
 
 function drawTestRectangle(x, y, w, h, hue) {
