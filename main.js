@@ -1,36 +1,13 @@
 let gameState = "game";
 let centerX = 0;
 let centerY = 0;
-
-let unitTypes = [
-  [255, 0, 0],
-  [255, 255, 0],
-  [255, 0, 255],
-];
-// let units = [];
-let units = [
-  unitTypes[0],
-  unitTypes[1],
-  unitTypes[2],
-  unitTypes[1],
-  unitTypes[1],
-  unitTypes[2],
-  unitTypes[0],
-  unitTypes[1],
-  unitTypes[2],
-  unitTypes[0],
-  unitTypes[1],
-  unitTypes[2],
-  unitTypes[2],
-  unitTypes[1],
-  unitTypes[2],
-  unitTypes[0],
-  unitTypes[1],
-];
+let units = [];
+const unitCount = 15;
 
 function setup() {
   rectMode(CENTER);
   ellipseMode(CENTER);
+  noStroke();
 }
 
 function draw() {
@@ -44,18 +21,52 @@ function draw() {
       break;
     case "game":
       //necessary to center and calibrate click
-      centerX = (5 * (width / 12) + 25 * 3) / 2;
-      centerY = (5 * (width / 8) + 50 * 2) / 2;
+      centerX = (5 * (width / 12) + 25 * 2.5) / 2;
+      centerY = (5 * (width / 8) + 50) / 2;
+      if (units.length === 0) {
+        populatePlayingField();
+      }
       drawPlayingField();
       break;
   }
+
   drawHand();
 }
 
 function drawPlayingField() {
-  for (let i = 0; i < 15; i++) { // it is a for loop that runs 15 times, 0 counts as one time.
+  for (let i = 0; i < unitCount; i++) {
     drawHitBox(i, units[i]);
   }
+}
+
+//draws a wave of random units
+function populatePlayingField() {
+  for (let i = 0; i < unitCount; i++) {
+    units.push(seedUnitType());
+  }
+}
+
+function deez() {}
+
+function seedUnitType() {
+  const type = Math.floor(Math.random() * 23);
+  let unitType;
+  switch (type) {
+    case 0:
+      unitType = { color: [255, 0, 0], lives: 5 };
+      break;
+    case 1:
+      unitType = { color: [0, 0, 255], lives: 10 };
+      break;
+    case 2:
+    case 3:
+      unitType = { color: [0, 255, 0], lives: 15 };
+      break;
+    default:
+      unitType = { color: [0, 0, 0, 0], lives: "empty" };
+      break;
+  }
+  return unitType;
 }
 
 function drawHitBox(position, unit) {
@@ -65,12 +76,15 @@ function drawHitBox(position, unit) {
   const col = Math.floor(position / 3);
   const x = (w + 25) * col;
   const y = (w + 50) * row;
+  //create the create click area
   createClickArea(x, y, w, h, unit, position);
+  push();
+  translate(centerX, centerY);
+  drawTestRectangle(x, y, w, h, unit);
+  pop();
 }
 
 function createClickArea(x, y, w, h, unit, position) {
-  let hue = unit;
-
   let xFix = mouseX - centerX;
   let yFix = mouseY - centerY;
   if (
@@ -83,17 +97,20 @@ function createClickArea(x, y, w, h, unit, position) {
     //red if user clicks
 
     console.log("mega kill!!!");
-    hue = [255];
-    unitClick(unit, position);
+    unitClick(position);
   }
-  push();
-  translate(centerX, centerY);
-  drawTestRectangle(x, y, w, h, hue);
-  pop();
 }
 
-function unitClick(unit, position) {
-  units[position] = "";
+//doesnt create new
+function unitClick(position) {
+  //make the units place empty (todo - only few seconds then add a random new unit)
+  if (units[position].lives > 0) {
+    //reduce lives by one each click
+    units[position].lives -= 1;
+    console.log(units[position].lives);
+  } else {
+    units[position] = { color: [0, 0, 0, 0], lives: "god" };
+  }
 }
 
 function drawHand() {
@@ -105,7 +122,7 @@ function drawHand() {
   ellipse(mouseX, mouseY, width / 17);
 }
 
-function drawTestRectangle(x, y, w, h, hue) {
-  fill(hue);
+function drawTestRectangle(x, y, w, h, unit) {
+  fill(unit.color);
   rect(x, y, w, h);
 }
