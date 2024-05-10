@@ -70,7 +70,7 @@ function newUnit() {
   let unitType;
   switch (type) {
     case 0:
-      unitType = { color: [255, 0, 0], lives: 5, lifetime: 100, points: 50 };
+      unitType = { color: [255, 0, 0], lives: 1, lifetime: 100, points: 50 };
       break;
     case 1:
       unitType = { color: [0, 0, 255], lives: 10, lifetime: 100, points: 10 };
@@ -98,6 +98,7 @@ function drawHitBox(position, unit) {
   const col = Math.floor(position / 3);
   const x = (w + 25) * col;
   const y = (w + 50) * row;
+
   //create the create click area
   createClickArea(x, y, w, h, position);
   push();
