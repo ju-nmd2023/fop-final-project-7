@@ -5,6 +5,11 @@ let units = [];
 const unitCount = 15;
 let timer = 200;
 let points = 0;
+let img;
+
+function preload() {
+  img = loadImage("img/cinnamonroll.jpg");
+}
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -15,7 +20,8 @@ function setup() {
 }
 
 function draw() {
-  background(143, 170, 244);
+  //background(143, 170, 244);
+  background(img, windowWidth, windowHeight);
 
   switch (gameState) {
     case "start":
