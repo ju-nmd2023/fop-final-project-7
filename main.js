@@ -11,6 +11,7 @@ function setup() {
   rectMode(CENTER);
   ellipseMode(CENTER);
   noStroke();
+  noCursor();
 }
 
 function draw() {
@@ -81,7 +82,7 @@ function newUnit() {
     default: //Empty unit
       unitType = {
         color: [0, 0, 0, 0],
-        lives: "empty",
+        lives: 3,
         lifetime: 50 * timeFactor,
         points: -1, //remove points for missing
       };
@@ -133,7 +134,7 @@ function unitClick(position) {
     points = points + units[position].points;
     units[position] = {
       color: [0, 0, 0, 0],
-      lives: "god",
+      lives: 3,
       lifetime: 100,
       points: -1,
     };
