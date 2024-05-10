@@ -4,6 +4,7 @@ let centerY = 0;
 let units = [];
 const unitCount = 15;
 let timer = 200;
+let points = 0;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -30,10 +31,11 @@ function draw() {
       }
       drawPlayingField();
       handleUnits();
+      timerCount();
+      pointsCount();
       break;
   }
 
-  timerCount();
   drawHand();
 }
 function handleUnits() {
@@ -67,20 +69,21 @@ function newUnit() {
   let unitType;
   switch (type) {
     case 0:
-      unitType = { color: [255, 0, 0], lives: 5, lifetime: 100 };
+      unitType = { color: [255, 0, 0], lives: 5, lifetime: 100, points: 50 };
       break;
     case 1:
-      unitType = { color: [0, 0, 255], lives: 10, lifetime: 100 };
+      unitType = { color: [0, 0, 255], lives: 10, lifetime: 100, points: 10 };
       break;
     case 2:
     case 3:
-      unitType = { color: [0, 255, 0], lives: 15, lifetime: 100 };
+      unitType = { color: [0, 255, 0], lives: 15, lifetime: 100, points: 25 };
       break;
     default: //Empty unit
       unitType = {
         color: [0, 0, 0, 0],
         lives: "empty",
         lifetime: 50 * timeFactor,
+        points: -1, //remove points for missing
       };
       break;
   }
@@ -127,7 +130,13 @@ function unitClick(position) {
     units[position].lives -= 1;
     console.log(units[position].lives);
   } else {
-    units[position] = { color: [0, 0, 0, 0], lives: "god", lifetime: 100 };
+    points = points + units[position].points;
+    units[position] = {
+      color: [0, 0, 0, 0],
+      lives: "god",
+      lifetime: 100,
+      points: -1,
+    };
   }
 }
 
@@ -148,7 +157,12 @@ function drawTestRectangle(x, y, w, h, unit) {
 }
 
 function timerCount() {
-  fill(220,100,220);
+  fill(220, 100, 220);
   textSize(30);
   text("TIMER − " + Math.floor(timer) + "s", 500, 30 / 1.06);
+}
+function pointsCount() {
+  fill(220, 100, 220);
+  textSize(30);
+  text("Points − " + points, 200, 30 / 1.06);
 }
