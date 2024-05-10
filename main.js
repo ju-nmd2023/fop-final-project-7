@@ -37,7 +37,6 @@ function handleUnits() {
   for (let i = 0; i < unitCount; i++) {
     if (units[i].lifetime > 0) {
       units[i].lifetime -= 0.5;
-      console.log(units[i].lifetime);
     } else {
       units[i] = seedUnitType();
     }
@@ -78,7 +77,7 @@ function seedUnitType() {
       unitType = {
         color: [0, 0, 0, 0],
         lives: "empty",
-        lifetime: 100 * timeFactor,
+        lifetime: 50 * timeFactor,
       };
       break;
   }
