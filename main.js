@@ -15,7 +15,7 @@ function draw() {
 
   switch (gameState) {
     case "start":
-      if (createClickArea(width / 2, height / 2, 200, 75, 255)) {
+      if (createClickArea(width / 2, height / 2, 200, 75, 1)) {
         gameState = "game";
       }
       break;
@@ -27,10 +27,21 @@ function draw() {
         populatePlayingField();
       }
       drawPlayingField();
+      handleUnits();
       break;
   }
 
   drawHand();
+}
+function handleUnits() {
+  for (let i = 0; i < unitCount; i++) {
+    if (units[i].lifetime > 0) {
+      units[i].lifetime -= 0.5;
+      console.log(units[i].lifetime);
+    } else {
+      units[i] = seedUnitType();
+    }
+  }
 }
 
 function drawPlayingField() {
@@ -46,24 +57,29 @@ function populatePlayingField() {
   }
 }
 
-function deez() {}
+// function deez() {}
 
 function seedUnitType() {
   const type = Math.floor(Math.random() * 23);
+  const timeFactor = 0.5 + Math.random() * 2;
   let unitType;
   switch (type) {
     case 0:
-      unitType = { color: [255, 0, 0], lives: 5 };
+      unitType = { color: [255, 0, 0], lives: 5, lifetime: 100 };
       break;
     case 1:
-      unitType = { color: [0, 0, 255], lives: 10 };
+      unitType = { color: [0, 0, 255], lives: 10, lifetime: 100 };
       break;
     case 2:
     case 3:
-      unitType = { color: [0, 255, 0], lives: 15 };
+      unitType = { color: [0, 255, 0], lives: 15, lifetime: 100 };
       break;
-    default:
-      unitType = { color: [0, 0, 0, 0], lives: "empty" };
+    default: //Empty unit
+      unitType = {
+        color: [0, 0, 0, 0],
+        lives: "empty",
+        lifetime: 100 * timeFactor,
+      };
       break;
   }
   return unitType;
@@ -77,14 +93,14 @@ function drawHitBox(position, unit) {
   const x = (w + 25) * col;
   const y = (w + 50) * row;
   //create the create click area
-  createClickArea(x, y, w, h, unit, position);
+  createClickArea(x, y, w, h, position);
   push();
   translate(centerX, centerY);
   drawTestRectangle(x, y, w, h, unit);
   pop();
 }
 
-function createClickArea(x, y, w, h, unit, position) {
+function createClickArea(x, y, w, h, position) {
   let xFix = mouseX - centerX;
   let yFix = mouseY - centerY;
   if (
@@ -109,7 +125,7 @@ function unitClick(position) {
     units[position].lives -= 1;
     console.log(units[position].lives);
   } else {
-    units[position] = { color: [0, 0, 0, 0], lives: "god" };
+    units[position] = { color: [0, 0, 0, 0], lives: "god", lifetime: 100 };
   }
 }
 
