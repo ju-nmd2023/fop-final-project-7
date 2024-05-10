@@ -3,8 +3,10 @@ let centerX = 0;
 let centerY = 0;
 let units = [];
 const unitCount = 15;
+let timer = 200;
 
 function setup() {
+  createCanvas(windowWidth, windowHeight);
   rectMode(CENTER);
   ellipseMode(CENTER);
   noStroke();
@@ -31,6 +33,7 @@ function draw() {
       break;
   }
 
+  timerCount();
   drawHand();
 }
 function handleUnits() {
@@ -38,7 +41,7 @@ function handleUnits() {
     if (units[i].lifetime > 0) {
       units[i].lifetime -= 0.5;
     } else {
-      units[i] = seedUnitType();
+      units[i] = newUnit();
     }
   }
 }
@@ -52,13 +55,13 @@ function drawPlayingField() {
 //draws a wave of random units
 function populatePlayingField() {
   for (let i = 0; i < unitCount; i++) {
-    units.push(seedUnitType());
+    units.push(newUnit());
   }
 }
 
 // function deez() {}
 
-function seedUnitType() {
+function newUnit() {
   const type = Math.floor(Math.random() * 23);
   const timeFactor = 0.5 + Math.random() * 2;
   let unitType;
@@ -129,15 +132,23 @@ function unitClick(position) {
 }
 
 function drawHand() {
+  push();
   fill(255);
   noCursor();
   if (mouseIsPressed) {
     fill(255, 0, 0);
   }
   ellipse(mouseX, mouseY, width / 17);
+  pop();
 }
 
 function drawTestRectangle(x, y, w, h, unit) {
   fill(unit.color);
   rect(x, y, w, h);
+}
+
+function timerCount() {
+  fill(220,100,220);
+  textSize(30);
+  text("TIMER − " + Math.floor(timer) + "s", 500, 30 / 1.06);
 }
