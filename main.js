@@ -1,9 +1,9 @@
-let gameState = "game";
+let gameState = "start";
 let centerX = 0;
 let centerY = 0;
 let units = [];
 const unitCount = 15;
-let timer = 200;
+let timer = 10;
 let points = 0;
 let img;
 
@@ -21,15 +21,17 @@ function setup() {
 
 function draw() {
   //background(143, 170, 244);
-  background(img, windowWidth, windowHeight);
+  background(143, 170, 244);
 
   switch (gameState) {
     case "start":
-      if (createClickArea(width / 2, height / 2, 200, 75, 1)) {
+      drawTestRectangle(width / 2, height / 2, 200, 75, [160, 255, 190]);
+      if (createClickArea(200, 200, 200, 75, 1)) {
         gameState = "game";
       }
       break;
     case "game":
+      background(img, windowWidth, windowHeight);
       //necessary to center and calibrate click
       centerX = (5 * (width / 12) + 25 * 2.5) / 2;
       centerY = (5 * (width / 8) + 50) / 2;
@@ -40,7 +42,21 @@ function draw() {
       handleUnits();
       timerCount();
       pointsCount();
+      timer = timer - 1 / 60;
+      if (timer <= 0) {
+        gameState = "gameOver";
+      }
       break;
+
+    case "gameOver":
+      drawTestRectangle(width / 2, height / 2, 200, 75, [160, 255, 190]);
+      //reset values
+      timer = 10;
+      points = 0;
+
+      if (createClickArea(200, 200, 200, 75, 1)) {
+        gameState = "game";
+      }
   }
 
   drawHand();
@@ -109,7 +125,7 @@ function drawHitBox(position, unit) {
   createClickArea(x, y, w, h, position);
   push();
   translate(centerX, centerY);
-  drawTestRectangle(x, y, w, h, unit);
+  drawTestRectangle(x, y, w, h, unit.color);
   pop();
 }
 
@@ -124,9 +140,12 @@ function createClickArea(x, y, w, h, position) {
     mouseIsPressed == true
   ) {
     //red if user clicks
-
-    console.log("mega kill!!!");
-    unitClick(position);
+    if (gameState === "game") {
+      console.log("mega kill!!!");
+      unitClick(position);
+    } else {
+      return true;
+    }
   }
 }
 
@@ -159,15 +178,15 @@ function drawHand() {
   pop();
 }
 
-function drawTestRectangle(x, y, w, h, unit) {
-  fill(unit.color);
+function drawTestRectangle(x, y, w, h, color) {
+  fill(color);
   rect(x, y, w, h);
 }
 
 function timerCount() {
   fill(220, 100, 220);
   textSize(30);
-  text("TIMER − " + Math.floor(timer) + "s", 500, 30 / 1.06);
+  text("TIMER − " + Math.floor(timer) + "s", 500, 200);
 }
 function pointsCount() {
   fill(220, 100, 220);
