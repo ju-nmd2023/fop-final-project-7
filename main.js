@@ -51,12 +51,13 @@ function draw() {
     case "gameOver":
       drawTestRectangle(width / 2, height / 2, 200, 75, [160, 255, 190]);
       //reset values
-      timer = 10;
-      points = 0;
 
       if (createClickArea(200, 200, 200, 75, 1)) {
+        timer = 10;
+        points = 0;
         gameState = "game";
       }
+      break;
   }
 
   drawHand();
@@ -148,6 +149,26 @@ function createClickArea(x, y, w, h, position) {
     }
   }
 }
+
+// this solution works with startscreen button, but not in game,
+// they are intertwined
+
+// function createClickArea(x, y, w, h, position) {
+//   // Check if mouse is pressed within the button area
+//   if (
+//     mouseX >= width / 2 - 100 &&
+//     mouseX <= width / 2 + 100 &&
+//     mouseY >= height / 2 - 37.5 &&
+//     mouseY <= height / 2 + 37.5 &&
+//     mouseIsPressed
+//   ) {
+//     // If on start screen, change game state
+//     if (gameState === "start") {
+//       console.log("Start button clicked");
+//       return true;
+//     }
+//   }
+// }
 
 //doesnt create new
 function unitClick(position) {
