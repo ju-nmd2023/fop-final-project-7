@@ -25,14 +25,17 @@ function draw() {
 
   switch (gameState) {
     case "start":
+      //start screen appears
       drawTestRectangle(width / 2, height / 2, 200, 75, [160, 255, 190]);
-      //start button
+
+      //start button :)
       if (createClickArea(width / 2, height / 2, 200, 75, 1)) {
         gameState = "game";
       }
       break;
     case "game":
       background(img, windowWidth, windowHeight);
+
       //necessary to center and calibrate click
       centerX = (5 * (width / 12) + 25 * 2.5) / 2;
       centerY = (5 * (width / 8) + 50) / 2;
@@ -52,10 +55,13 @@ function draw() {
       break;
 
     case "gameover":
-      drawTestRectangle(width / 2, height / 2, 200, 75, [160, 255, 190]);
+      //gameover screen appears
+      drawTestRectangle(width / 2, height / 2, 200, 75, [255, 255, 20]);
       //reset values
       timer = 10;
       points = 0;
+
+      //gameover button appears
       if (createClickArea(width / 2, height / 2, 200, 75, 1)) {
         gameState = "game";
       }
