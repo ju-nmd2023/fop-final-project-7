@@ -183,7 +183,8 @@ function drawHand() {
 
 function drawTestRectangle(x, y, w, h, color) {
   fill(color);
-  rect(x, y, w, h);
+  //make the unit smaller than the hitbox slightly, so the cursor hits easily
+  rect(x, y, w / 1.2, h / 1.2);
 }
 
 function timerCount() {
