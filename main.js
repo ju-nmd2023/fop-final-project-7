@@ -53,7 +53,7 @@ function draw() {
       drawTestRectangle(width / 2, height / 2, 200, 75, [160, 255, 190]);
       //reset values
 
-      if (createClickArea(200, 200, 200, 75, 1)) {
+      if (createClickArea(width / 2, height / 2, 200, 75, 1)) {
         timer = 10;
         points = 0;
         gameState = "game";
