@@ -45,17 +45,18 @@ function draw() {
       pointsCount();
       timer = timer - 1 / 60;
       if (timer <= 0) {
-        gameState = "gameOver";
+        gameState = "gameover";
+        centerX = 0;
+        centerY = 0;
       }
       break;
 
-    case "gameOver":
+    case "gameover":
       drawTestRectangle(width / 2, height / 2, 200, 75, [160, 255, 190]);
       //reset values
-
-      if (createClickArea(200, 200, 200, 75, 1)) {
-        timer = 10;
-        points = 0;
+      timer = 10;
+      points = 0;
+      if (createClickArea(width / 2, height / 2, 200, 75, 1)) {
         gameState = "game";
       }
       break;
@@ -206,12 +207,18 @@ function drawTestRectangle(x, y, w, h, color) {
 }
 
 function timerCount() {
+  push();
   fill(220, 100, 220);
   textSize(30);
-  text("TIMER − " + Math.floor(timer) + "s", 500, 200);
+  textAlign(LEFT);
+  text("TIMER − " + Math.floor(timer) + "s", width * 0.7, height * 0.05);
+  pop();
 }
 function pointsCount() {
+  push();
   fill(220, 100, 220);
   textSize(30);
-  text("Points − " + points, 200, 30 / 1.06);
+  textAlign(RIGHT);
+  text("Points − " + points, width * 0.3, height * 0.05);
+  pop();
 }
