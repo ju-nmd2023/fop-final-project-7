@@ -1,9 +1,12 @@
+//boxes should be class
+// Predators and Animals should inherit from base class Unit
+
 let gameState = "start";
 let centerX = 0;
 let centerY = 0;
 let units = [];
 const unitCount = 15;
-let timer = 1;
+let timer = 10;
 let points = 0;
 let img;
 
@@ -26,7 +29,7 @@ function draw() {
   switch (gameState) {
     case "start":
       //start button appears
-      drawTestRectangle(width / 2, height / 2, 200, 75, [99, 60, 18]);
+      drawRectangle(width / 2, height / 2, 200, 75, [110, 255, 120], 20);
 
       //start button in green :)
       if (createClickArea(width / 2, height / 2, 200, 75, 1)) {
@@ -57,7 +60,8 @@ function draw() {
       background(34, 34, 34);
 
       //gameover screen and button appears
-      drawTestRectangle(width / 2, height / 2, 200, 75, [255, 52, 52]);
+      //Function just for start button
+      drawRectangle(width / 2, height / 2, 200, 75, [255, 52, 52, 20]);
 
       //reset values
       timer = 10;
@@ -83,8 +87,20 @@ function handleUnits() {
 }
 
 function drawPlayingField() {
+  //create the create click area
+
   for (let i = 0; i < unitCount; i++) {
-    drawHitBox(i, units[i]);
+    const w = width / 12;
+    const h = width / 8;
+    const row = i % 3;
+    const col = Math.floor(i / 3);
+    const x = (w + 25) * col;
+    const y = (w + 50) * row;
+    createClickArea(x, y, w, h, i);
+    push();
+    translate(centerX, centerY);
+    drawRectangle(x, y, w, h, units[i].color);
+    pop();
   }
 }
 
@@ -122,22 +138,6 @@ function newUnit() {
       break;
   }
   return unitType;
-}
-
-function drawHitBox(position, unit) {
-  const w = width / 12;
-  const h = width / 8;
-  const row = position % 3;
-  const col = Math.floor(position / 3);
-  const x = (w + 25) * col;
-  const y = (w + 50) * row;
-
-  //create the create click area
-  createClickArea(x, y, w, h, position);
-  push();
-  translate(centerX, centerY);
-  drawTestRectangle(x, y, w, h, unit.color);
-  pop();
 }
 
 function createClickArea(x, y, w, h, position) {
@@ -189,10 +189,10 @@ function drawHand() {
   pop();
 }
 
-function drawTestRectangle(x, y, w, h, color) {
+function drawRectangle(x, y, w, h, color, radius = 20) {
   fill(color);
   //make the unit smaller than the hitbox slightly, so the cursor hits easily
-  rect(x, y, w / 1.2, h / 1.2, 20); //20 adds radius
+  rect(x, y, w / 1.2, h / 1.2, radius); //20 adds radius
 }
 
 function timerCount() {
