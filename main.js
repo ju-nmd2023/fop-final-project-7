@@ -3,7 +3,7 @@ let centerX = 0;
 let centerY = 0;
 let units = [];
 const unitCount = 15;
-let timer = 10;
+let timer = 1;
 let points = 0;
 let img;
 
@@ -21,12 +21,14 @@ function setup() {
 
 function draw() {
   //background(143, 170, 244);
-  background(143, 170, 244);
+  background(215, 249, 255);
 
   switch (gameState) {
     case "start":
-      drawTestRectangle(width / 2, height / 2, 200, 75, [160, 255, 190]);
-      //start button
+      //start button appears
+      drawTestRectangle(width / 2, height / 2, 200, 75, [99, 60, 18]);
+
+      //start button in green :)
       if (createClickArea(width / 2, height / 2, 200, 75, 1)) {
         gameState = "game";
       }
@@ -52,10 +54,16 @@ function draw() {
       break;
 
     case "gameover":
-      drawTestRectangle(width / 2, height / 2, 200, 75, [160, 255, 190]);
+      background(34, 34, 34);
+
+      //gameover screen and button appears
+      drawTestRectangle(width / 2, height / 2, 200, 75, [255, 52, 52]);
+
       //reset values
       timer = 10;
       points = 0;
+
+      //gameover button appears
       if (createClickArea(width / 2, height / 2, 200, 75, 1)) {
         gameState = "game";
       }
@@ -183,8 +191,8 @@ function drawHand() {
 
 function drawTestRectangle(x, y, w, h, color) {
   fill(color);
-  //make the unit smaller than the hitbox slightly, so it deosnt feel hard to hit
-  rect(x, y, w / 1.5, h / 1.5);
+  //make the unit smaller than the hitbox slightly, so the cursor hits easily
+  rect(x, y, w / 1.2, h / 1.2, 20); //20 adds radius
 }
 
 function timerCount() {
