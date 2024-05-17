@@ -6,7 +6,7 @@ let centerX = 0;
 let centerY = 0;
 let units = [];
 const unitCount = 15;
-let timer = 10;
+let timer = 1;
 let points = 0;
 let img;
 
@@ -29,7 +29,7 @@ function draw() {
   switch (gameState) {
     case "start":
       //start button appears
-      drawRectangle(width / 2, height / 2, 200, 75, [110, 255, 120], 20);
+      drawRectangle(width / 2, height / 2, 200, 75, [110, 255, 120]);
 
       //start button in green :)
       if (createClickArea(width / 2, height / 2, 200, 75, 1)) {
@@ -60,8 +60,8 @@ function draw() {
       background(34, 34, 34);
 
       //gameover screen and button appears
-      //Function just for start button
-      drawRectangle(width / 2, height / 2, 200, 75, [255, 52, 52, 20]);
+      //Function just for try again button
+      drawRectangle(width / 2, height / 2, 200, 75, [255, 52, 52]);
 
       //reset values
       timer = 10;
@@ -99,7 +99,7 @@ function drawPlayingField() {
     createClickArea(x, y, w, h, i);
     push();
     translate(centerX, centerY);
-    drawRectangle(x, y, w, h, units[i].color);
+    drawRectangle(x, y, w, h, units[i].color,0);
     pop();
   }
 }
@@ -111,7 +111,7 @@ function populatePlayingField() {
   }
 }
 
-// function deez() {}
+
 
 function newUnit() {
   const type = Math.floor(Math.random() * 23);
@@ -189,10 +189,13 @@ function drawHand() {
   pop();
 }
 
+//Radius will be 0 unless you tell it different
+//And we tell it different in gamestates start, and gameover.
+//For those it is 20 
 function drawRectangle(x, y, w, h, color, radius = 20) {
   fill(color);
   //make the unit smaller than the hitbox slightly, so the cursor hits easily
-  rect(x, y, w / 1.2, h / 1.2, radius); //20 adds radius
+  rect(x, y, w / 1.2, h / 1.2, radius); // tells the radius to be 0
 }
 
 function timerCount() {
