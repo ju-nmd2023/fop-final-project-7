@@ -25,17 +25,14 @@ function draw() {
 
   switch (gameState) {
     case "start":
-      //start screen appears
       drawTestRectangle(width / 2, height / 2, 200, 75, [160, 255, 190]);
-
-      //start button :)
+      //start button
       if (createClickArea(width / 2, height / 2, 200, 75, 1)) {
         gameState = "game";
       }
       break;
     case "game":
       background(img, windowWidth, windowHeight);
-
       //necessary to center and calibrate click
       centerX = (5 * (width / 12) + 25 * 2.5) / 2;
       centerY = (5 * (width / 8) + 50) / 2;
@@ -55,13 +52,10 @@ function draw() {
       break;
 
     case "gameover":
-      //gameover screen appears
-      drawTestRectangle(width / 2, height / 2, 200, 75, [255, 255, 20]);
+      drawTestRectangle(width / 2, height / 2, 200, 75, [160, 255, 190]);
       //reset values
       timer = 10;
       points = 0;
-
-      //gameover button appears
       if (createClickArea(width / 2, height / 2, 200, 75, 1)) {
         gameState = "game";
       }
@@ -183,14 +177,14 @@ function drawHand() {
   if (mouseIsPressed) {
     fill(255, 0, 0);
   }
-  ellipse(mouseX, mouseY, width / 17);
+  ellipse(mouseX, mouseY, width / 34 + height / 34);
   pop();
 }
 
 function drawTestRectangle(x, y, w, h, color) {
   fill(color);
-  //make the unit smaller than the hitbox slightly, so the cursor hits easily
-  rect(x, y, w / 1.2, h / 1.2);
+  //make the unit smaller than the hitbox slightly, so it deosnt feel hard to hit
+  rect(x, y, w / 1.5, h / 1.5);
 }
 
 function timerCount() {
