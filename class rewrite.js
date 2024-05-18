@@ -1,12 +1,9 @@
-//boxes should be class
-// Predators and Animals should inherit from base class Unit
-
 let gameState = "start";
 let centerX = 0;
 let centerY = 0;
 let units = [];
 const unitCount = 15;
-let timer = 10;
+let timer = 1;
 let points = 0;
 let img;
 
@@ -22,6 +19,43 @@ function setup() {
   noCursor();
 }
 
+class Button {
+  constructor(x, y, w, h, hue) {
+    this.x = x;
+    this.y = y;
+    this.w = w;
+    this.h = h;
+    this.hue = hue;
+  }
+  draw() {
+    push();
+    fill(this.hue);
+    rect(this.x, this.y, this.w, this.h);
+    pop();
+  }
+  listen() {
+    const wRadius = this.w / 2;
+    const hRadius = this.h / 2;
+    if (
+      mouseX < this.x + wRadius &&
+      mouseX > this.x - wRadius &&
+      mouseY < this.y + hRadius &&
+      mouseY > this.y - hRadius
+    ) {
+      push();
+      fill(255, 255, 255, 20);
+      rect(this.x, this.y, this.w, this.h);
+      pop();
+      if (mouseIsPressed) {
+        push();
+        fill(255, 255, 255, 50);
+        rect(this.x, this.y, this.w, this.h);
+        pop();
+      }
+    }
+  }
+}
+
 function draw() {
   //background(143, 170, 244);
   background(215, 249, 255);
@@ -29,12 +63,15 @@ function draw() {
   switch (gameState) {
     case "start":
       //start button appears
-      drawRectangle(width / 2, height / 2, 200, 75, [110, 255, 120], 20);
+      const startButton = {
+        x: width / 2,
+        y: width / 2,
+        w: 100,
+        h: 50,
+        hue: [150, 255, 150],
+      };
+      startButton.draw();
 
-      //start button in green :)
-      if (createClickArea(width / 2, height / 2, 200, 75, 1)) {
-        gameState = "game";
-      }
       break;
     case "game":
       background(img, windowWidth, windowHeight);
@@ -60,8 +97,7 @@ function draw() {
       background(34, 34, 34);
 
       //gameover screen and button appears
-      //Function just for start button
-      drawRectangle(width / 2, height / 2, 200, 75, [255, 52, 52, 20]);
+      drawTestRectangle(width / 2, height / 2, 200, 75, [255, 52, 52]);
 
       //reset values
       timer = 10;
@@ -87,20 +123,8 @@ function handleUnits() {
 }
 
 function drawPlayingField() {
-  //create the create click area
-
   for (let i = 0; i < unitCount; i++) {
-    const w = width / 12;
-    const h = width / 8;
-    const row = i % 3;
-    const col = Math.floor(i / 3);
-    const x = (w + 25) * col;
-    const y = (w + 50) * row;
-    createClickArea(x, y, w, h, i);
-    push();
-    translate(centerX, centerY);
-    drawRectangle(x, y, w, h, units[i].color);
-    pop();
+    drawHitBox(i, units[i]);
   }
 }
 
@@ -140,24 +164,20 @@ function newUnit() {
   return unitType;
 }
 
-function createClickArea(x, y, w, h, position) {
-  let xFix = mouseX - centerX;
-  let yFix = mouseY - centerY;
-  if (
-    xFix >= x - w / 2 &&
-    xFix <= x + w / 2 &&
-    yFix >= y - h / 2 &&
-    yFix <= y + h / 2 &&
-    mouseIsPressed == true
-  ) {
-    //red if user clicks
-    if (gameState === "game") {
-      console.log("mega kill!!!");
-      unitClick(position);
-    } else {
-      return true;
-    }
-  }
+function drawHitBox(position, unit) {
+  const w = width / 12;
+  const h = width / 8;
+  const row = position % 3;
+  const col = Math.floor(position / 3);
+  const x = (w + 25) * col;
+  const y = (w + 50) * row;
+
+  //create the create click area
+  createClickArea(x, y, w, h, position);
+  push();
+  translate(centerX, centerY);
+  drawTestRectangle(x, y, w, h, unit.color);
+  pop();
 }
 
 //doesnt create new
@@ -189,10 +209,10 @@ function drawHand() {
   pop();
 }
 
-function drawRectangle(x, y, w, h, color, radius = 20) {
+function drawTestRectangle(x, y, w, h, color) {
   fill(color);
   //make the unit smaller than the hitbox slightly, so the cursor hits easily
-  rect(x, y, w / 1.2, h / 1.2, radius); //20 adds radius
+  rect(x, y, w / 1.2, h / 1.2, 20); //20 adds radius
 }
 
 function timerCount() {
