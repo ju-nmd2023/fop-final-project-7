@@ -19,20 +19,15 @@ function setup() {
   noCursor();
 }
 
-class Button {
-  constructor(x, y, w, h, hue) {
+class ClickBox {
+  constructor(x, y, w, h) {
     this.x = x;
     this.y = y;
     this.w = w;
     this.h = h;
-    this.hue = hue;
+    this.state = "inactive";
   }
-  draw() {
-    push();
-    fill(this.hue);
-    rect(this.x, this.y, this.w, this.h);
-    pop();
-  }
+
   listen() {
     const wRadius = this.w / 2;
     const hRadius = this.h / 2;
@@ -42,16 +37,70 @@ class Button {
       mouseY < this.y + hRadius &&
       mouseY > this.y - hRadius
     ) {
-      push();
-      fill(255, 255, 255, 20);
-      rect(this.x, this.y, this.w, this.h);
-      pop();
+      this.state = "hover";
       if (mouseIsPressed) {
-        push();
-        fill(255, 255, 255, 50);
-        rect(this.x, this.y, this.w, this.h);
-        pop();
+        this.state = "click";
       }
+    }
+  }
+}
+
+class Button extends ClickBox {
+  constructor(x, y, w, h, text, hues, radius = 20, callback = true) {
+    super(x, y, w, h);
+    this.text = text;
+    this.hues = hues;
+    this.r = radius;
+    this.do = callback;
+  }
+  listen() {
+    super.listen();
+    if (this.state === "click") {
+      return this.do;
+    }
+  }
+  draw() {
+    push();
+    //change color depending on where the cursor is.
+    switch (this.state) {
+      case "hover":
+      case "click":
+        fill(this.hues[1]);
+        break;
+      default:
+        fill(this.hues[0]);
+        break;
+    }
+    //Draw the rectangle
+    rect(this.x, this.y, this.w, this.h, this.r);
+    pop();
+  }
+}
+
+class Unit extends ClickBox {
+  constructor(x, y, health, lifetime, pointsReward, timeReward) {
+    super(x, y);
+    this.w = 80;
+    this.h = 120;
+    this.health = health;
+    this.lifetime = lifetime;
+    this.pointsReward = pointsReward;
+    this.timeReward = timeReward;
+  }
+  listen() {
+    super.listen();
+    if (this.state === "click") {
+      this.health -= 1; //reduces health by one on click
+    }
+    //frameRate returns the amount of frames in a second, so this should remove 1 lifetime every second.
+    this.lifetime -= 1 / frameRate();
+
+    if (this.health < 1) {
+      points += this.pointsReward;
+      timer += this.timeReward;
+    }
+    if (this.lifetime < 1) {
+      timer -= this.timeReward; //time reward is currently time punishment aswell
     }
   }
 }
@@ -62,14 +111,14 @@ function draw() {
 
   switch (gameState) {
     case "start":
-      //start button appears
-      const startButton = {
-        x: width / 2,
-        y: width / 2,
-        w: 100,
-        h: 50,
-        hue: [150, 255, 150],
-      };
+      //following 1 row part chatgpt "how to do this simpler (set up the object on one row)"
+      const startButton = new Button(width / 2, height / 2, 100, 40, "Start", [
+        "#00ff00",
+        "#aaffaa",
+      ]);
+      if (startButton.listen()) {
+        gameState = "game";
+      }
       startButton.draw();
 
       break;
@@ -112,6 +161,7 @@ function draw() {
 
   drawHand();
 }
+
 function handleUnits() {
   for (let i = 0; i < unitCount; i++) {
     if (units[i].lifetime > 0) {
