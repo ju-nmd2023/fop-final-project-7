@@ -15,7 +15,10 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  let canvas = createCanvas(windowWidth, windowHeight);
+  canvas.style("display", "block");
+  //why
+  // canvas.parent("canvas");
   rectMode(CENTER);
   ellipseMode(CENTER);
   noStroke();
@@ -99,7 +102,7 @@ function drawPlayingField() {
     createClickArea(x, y, w, h, i);
     push();
     translate(centerX, centerY);
-    drawRectangle(x, y, w, h, units[i].color,0);
+    drawRectangle(x, y, w, h, units[i].color, 0);
     pop();
   }
 }
@@ -110,8 +113,6 @@ function populatePlayingField() {
     units.push(newUnit());
   }
 }
-
-
 
 function newUnit() {
   const type = Math.floor(Math.random() * 23);
@@ -191,7 +192,7 @@ function drawHand() {
 
 //Radius will be 0 unless you tell it different
 //And we tell it different in gamestates start, and gameover.
-//For those it is 20 
+//For those it is 20
 function drawRectangle(x, y, w, h, color, radius = 20) {
   fill(color);
   //make the unit smaller than the hitbox slightly, so the cursor hits easily
