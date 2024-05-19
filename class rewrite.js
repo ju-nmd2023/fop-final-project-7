@@ -1,12 +1,9 @@
-//boxes should be class
-// Predators and Animals should inherit from base class Unit
-
 let gameState = "start";
 let centerX = 0;
 let centerY = 0;
 let units = [];
 const unitCount = 15;
-let timer = 10;
+let timer = 1;
 let points = 0;
 let img;
 
@@ -15,14 +12,97 @@ function preload() {
 }
 
 function setup() {
-  let canvas = createCanvas(windowWidth, windowHeight);
-  canvas.style("display", "block");
-  //why
-  // canvas.parent("canvas");
+  createCanvas(windowWidth, windowHeight);
   rectMode(CENTER);
   ellipseMode(CENTER);
   noStroke();
   noCursor();
+}
+
+class ClickBox {
+  constructor(x, y, w, h) {
+    this.x = x;
+    this.y = y;
+    this.w = w;
+    this.h = h;
+    this.state = "inactive";
+  }
+
+  listen() {
+    const wRadius = this.w / 2;
+    const hRadius = this.h / 2;
+    if (
+      mouseX < this.x + wRadius &&
+      mouseX > this.x - wRadius &&
+      mouseY < this.y + hRadius &&
+      mouseY > this.y - hRadius
+    ) {
+      this.state = "hover";
+      if (mouseIsPressed) {
+        this.state = "click";
+      }
+    }
+  }
+}
+
+class Button extends ClickBox {
+  constructor(x, y, w, h, text, hues, radius = 20, callback = true) {
+    super(x, y, w, h);
+    this.text = text;
+    this.hues = hues;
+    this.r = radius;
+    this.do = callback;
+  }
+  listen() {
+    super.listen();
+    if (this.state === "click") {
+      return this.do;
+    }
+  }
+  draw() {
+    push();
+    //change color depending on where the cursor is.
+    switch (this.state) {
+      case "hover":
+      case "click":
+        fill(this.hues[1]);
+        break;
+      default:
+        fill(this.hues[0]);
+        break;
+    }
+    //Draw the rectangle
+    rect(this.x, this.y, this.w, this.h, this.r);
+    pop();
+  }
+}
+
+class Unit extends ClickBox {
+  constructor(x, y, health, lifetime, pointsReward, timeReward) {
+    super(x, y);
+    this.w = 80;
+    this.h = 120;
+    this.health = health;
+    this.lifetime = lifetime;
+    this.pointsReward = pointsReward;
+    this.timeReward = timeReward;
+  }
+  listen() {
+    super.listen();
+    if (this.state === "click") {
+      this.health -= 1; //reduces health by one on click
+    }
+    //frameRate returns the amount of frames in a second, so this should remove 1 lifetime every second.
+    this.lifetime -= 1 / frameRate();
+
+    if (this.health < 1) {
+      points += this.pointsReward;
+      timer += this.timeReward;
+    }
+    if (this.lifetime < 1) {
+      timer -= this.timeReward; //time reward is currently time punishment aswell
+    }
+  }
 }
 
 function draw() {
@@ -31,13 +111,16 @@ function draw() {
 
   switch (gameState) {
     case "start":
-      //start button appears
-      drawRectangle(width / 2, height / 2, 200, 75, [110, 255, 120]);
-
-      //start button in green :)
-      if (createClickArea(width / 2, height / 2, 200, 75, 1)) {
+      //following 1 row part chatgpt "how to do this simpler (set up the object on one row)"
+      const startButton = new Button(width / 2, height / 2, 100, 40, "Start", [
+        "#00ff00",
+        "#aaffaa",
+      ]);
+      if (startButton.listen()) {
         gameState = "game";
       }
+      startButton.draw();
+
       break;
     case "game":
       background(img, windowWidth, windowHeight);
@@ -63,8 +146,7 @@ function draw() {
       background(34, 34, 34);
 
       //gameover screen and button appears
-      //Function just for try again button
-      drawRectangle(width / 2, height / 2, 200, 75, [255, 52, 52]);
+      drawTestRectangle(width / 2, height / 2, 200, 75, [255, 52, 52]);
 
       //reset values
       timer = 10;
@@ -79,6 +161,7 @@ function draw() {
 
   drawHand();
 }
+
 function handleUnits() {
   for (let i = 0; i < unitCount; i++) {
     if (units[i].lifetime > 0) {
@@ -90,20 +173,8 @@ function handleUnits() {
 }
 
 function drawPlayingField() {
-  //create the create click area
-
   for (let i = 0; i < unitCount; i++) {
-    const w = width / 12;
-    const h = width / 8;
-    const row = i % 3;
-    const col = Math.floor(i / 3);
-    const x = (w + 25) * col;
-    const y = (w + 50) * row;
-    createClickArea(x, y, w, h, i);
-    push();
-    translate(centerX, centerY);
-    drawRectangle(x, y, w, h, units[i].color, 0);
-    pop();
+    drawHitBox(i, units[i]);
   }
 }
 
@@ -113,6 +184,8 @@ function populatePlayingField() {
     units.push(newUnit());
   }
 }
+
+// function deez() {}
 
 function newUnit() {
   const type = Math.floor(Math.random() * 23);
@@ -141,24 +214,20 @@ function newUnit() {
   return unitType;
 }
 
-function createClickArea(x, y, w, h, position) {
-  let xFix = mouseX - centerX;
-  let yFix = mouseY - centerY;
-  if (
-    xFix >= x - w / 2 &&
-    xFix <= x + w / 2 &&
-    yFix >= y - h / 2 &&
-    yFix <= y + h / 2 &&
-    mouseIsPressed == true
-  ) {
-    //red if user clicks
-    if (gameState === "game") {
-      console.log("mega kill!!!");
-      unitClick(position);
-    } else {
-      return true;
-    }
-  }
+function drawHitBox(position, unit) {
+  const w = width / 12;
+  const h = width / 8;
+  const row = position % 3;
+  const col = Math.floor(position / 3);
+  const x = (w + 25) * col;
+  const y = (w + 50) * row;
+
+  //create the create click area
+  createClickArea(x, y, w, h, position);
+  push();
+  translate(centerX, centerY);
+  drawTestRectangle(x, y, w, h, unit.color);
+  pop();
 }
 
 //doesnt create new
@@ -190,14 +259,10 @@ function drawHand() {
   pop();
 }
 
-//Radius will be 0 unless you tell it different
-//And we tell it different in gamestates start, and gameover.
-//For those it is 20
-function drawRectangle(x, y, w, h, color, radius = 20) {
+function drawTestRectangle(x, y, w, h, color) {
   fill(color);
   //make the unit smaller than the hitbox slightly, so the cursor hits easily
-  rect(x, y, w / 1.2, h / 1.2, radius); // tells the radius to be 0
-  rect(x, y, w / 1.2, h / 1.2, radius); //20 adds radius
+  rect(x, y, w / 1.2, h / 1.2, 20); //20 adds radius
 }
 
 function timerCount() {
