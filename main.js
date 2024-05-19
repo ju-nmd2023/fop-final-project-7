@@ -15,7 +15,10 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  let canvas = createCanvas(windowWidth, windowHeight);
+  canvas.style("display", "block");
+  //why
+  // canvas.parent("canvas");
   rectMode(CENTER);
   ellipseMode(CENTER);
   noStroke();
