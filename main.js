@@ -18,7 +18,7 @@ function setup() {
   let canvas = createCanvas(windowWidth, windowHeight);
   canvas.style("display", "block");
   //why
-  // canvas.parent("canvas");
+  canvas.parent("p5");
   rectMode(CENTER);
   ellipseMode(CENTER);
   noStroke();
