@@ -83,17 +83,24 @@ class Unit extends ClickBox {
     this.w = 80;
     this.h = 120;
     this.health = health;
+    this.maxPets = health;
     this.lifetime = lifetime;
     this.pointsReward = pointsReward;
     this.timeReward = timeReward;
+    this.hues = ["#fff", "#fffeee", "#ff4747"];
   }
   listen() {
     super.listen();
-    if (this.state === "click") {
-      this.health -= 1; //reduces health by one on click
-    }
+
     //frameRate returns the amount of frames in a second, so this should remove 1 lifetime every second.
     this.lifetime -= 1 / frameRate();
+
+    if (this.state === "click" && (mouseButton === RIGHT || keyIsDown(SHIFT))) {
+      this.maxPets -= 1; //reduces pet counter by one on click
+    }
+    if (this.state === "click" && mouseButton === LEFT) {
+      this.health -= 1; //reduces health by one on click
+    }
 
     if (this.health < 1) {
       points += this.pointsReward;
@@ -103,7 +110,56 @@ class Unit extends ClickBox {
       timer -= this.timeReward; //time reward is currently time punishment aswell
     }
   }
+  draw() {
+    switch (this.state) {
+      case "hover":
+        fill(this.hues[1]);
+        break;
+      case "click":
+        fill(this.hues[2]);
+        break;
+      default:
+        fill(this.hues[0]);
+        break;
+    }
+    rect(x, y, w, h);
+  }
 }
+
+class Friend extends Unit {
+  constructor(x, y, health, lifetime, pointsReward, timeReward) {
+    super(x, y, health, lifetime, pointsReward, timeReward);
+  }
+  listen() {
+    super.listen();
+  }
+  draw() {
+    super.draw();
+  }
+}
+
+class Enemy extends Unit {
+  constructor(x, y, health, lifetime, pointsReward, timeReward) {
+    super(x, y, health, lifetime, pointsReward, timeReward);
+  }
+  listen() {
+    super.listen();
+  }
+  draw() {
+    super.draw();
+  }
+}
+// class Empty extends Unit {
+//   constructor(x, y, lifetime) {
+//     super(x, y, lifetime);
+//   }
+//   listen() {
+//     if (this.state === "click" && mouseButton === LEFT) {
+//       this.health -= 1; //reduces health by one on click
+//     }
+//     super.listen();
+//   }
+// }
 
 function draw() {
   //background(143, 170, 244);
@@ -134,6 +190,7 @@ function draw() {
       handleUnits();
       timerCount();
       pointsCount();
+
       timer = timer - 1 / 60;
       if (timer <= 0) {
         gameState = "gameover";
