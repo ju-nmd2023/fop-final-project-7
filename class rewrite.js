@@ -3,7 +3,7 @@ let centerX = 0;
 let centerY = 0;
 let units = [];
 const unitCount = 15;
-let timer = 1;
+let timer = 1000;
 let points = 0;
 let img;
 
@@ -19,6 +19,54 @@ function setup() {
   noCursor();
 }
 
+function draw() {
+  //background(143, 170, 244);
+  background(215, 249, 255);
+
+  switch (gameState) {
+    case "start":
+      //following 1 row part chatgpt "how to do this simpler (set up the object on one row)"
+      const startButton = new Button(width / 2, height / 2, 100, 40, "Start", [
+        "#00ff00",
+        "#aaffaa",
+      ]);
+      if (startButton.listen()) {
+        gameState = "game";
+      }
+      startButton.draw();
+
+      break;
+    case "game":
+      background(img, windowWidth, windowHeight);
+
+      if (units.length === 0) {
+        populatePlayingField();
+      }
+      drawPlayingField();
+
+      timer = timer - 1 / 60;
+      if (timer <= 0) {
+        gameState = "gameover";
+        centerX = 0;
+        centerY = 0;
+      }
+      break;
+
+    case "gameover":
+      background(34, 34, 34);
+
+      //gameover screen and button appears
+      drawTestRectangle(width / 2, height / 2, 200, 75, [255, 52, 52]);
+
+      //reset values
+      timer = 10;
+      points = 0;
+
+      break;
+  }
+
+  drawHand();
+}
 class ClickBox {
   constructor(x, y, w, h) {
     this.x = x;
@@ -31,6 +79,7 @@ class ClickBox {
   listen() {
     const wRadius = this.w / 2;
     const hRadius = this.h / 2;
+
     if (
       mouseX < this.x + wRadius &&
       mouseX > this.x - wRadius &&
@@ -72,22 +121,26 @@ class Button extends ClickBox {
         break;
     }
     //Draw the rectangle
+    if (this.state != "inactive") {
+      console.log(this.state);
+    }
     rect(this.x, this.y, this.w, this.h, this.r);
     pop();
   }
 }
 
 class Unit extends ClickBox {
-  constructor(x, y, health, lifetime, pointsReward, timeReward) {
-    super(x, y);
-    this.w = 80;
-    this.h = 120;
-    this.health = health;
-    this.maxPets = health;
-    this.lifetime = lifetime;
-    this.pointsReward = pointsReward;
-    this.timeReward = timeReward;
-    this.hues = ["#fff", "#fffeee", "#ff4747"];
+  constructor(index) {
+    super();
+    this.index = index;
+    this.w = width / 17;
+    this.h = width / 11;
+    this.health = 1;
+    this.maxPets = 1;
+    this.lifetime = 1;
+    this.pointsReward = 0;
+    this.timeReward = 0;
+    this.hues = ["#f00", "#fffeee", "#ff4747"];
   }
   listen() {
     super.listen();
@@ -101,13 +154,14 @@ class Unit extends ClickBox {
     if (this.state === "click" && mouseButton === LEFT) {
       this.health -= 1; //reduces health by one on click
     }
-
-    if (this.health < 1) {
-      points += this.pointsReward;
-      timer += this.timeReward;
-    }
-    if (this.lifetime < 1) {
-      timer -= this.timeReward; //time reward is currently time punishment aswell
+    if (this.health < 1 || this.lifetime < 1) {
+      if (this.health < 1) {
+        points += this.pointsReward;
+        timer += this.timeReward;
+      } else {
+        timer -= this.timeReward; //time reward is currently time punishment aswell
+      }
+      units[this.index] = new Empty(this.index);
     }
   }
   draw() {
@@ -122,169 +176,112 @@ class Unit extends ClickBox {
         fill(this.hues[0]);
         break;
     }
-    rect(x, y, w, h);
-  }
-}
-
-class Friend extends Unit {
-  constructor(x, y, health, lifetime, pointsReward, timeReward) {
-    super(x, y, health, lifetime, pointsReward, timeReward);
-  }
-  listen() {
-    super.listen();
-  }
-  draw() {
-    super.draw();
-  }
-}
-
-class Enemy extends Unit {
-  constructor(x, y, health, lifetime, pointsReward, timeReward) {
-    super(x, y, health, lifetime, pointsReward, timeReward);
-  }
-  listen() {
-    super.listen();
-  }
-  draw() {
-    super.draw();
-  }
-}
-// class Empty extends Unit {
-//   constructor(x, y, lifetime) {
-//     super(x, y, lifetime);
-//   }
-//   listen() {
-//     if (this.state === "click" && mouseButton === LEFT) {
-//       this.health -= 1; //reduces health by one on click
-//     }
-//     super.listen();
-//   }
-// }
-
-function draw() {
-  //background(143, 170, 244);
-  background(215, 249, 255);
-
-  switch (gameState) {
-    case "start":
-      //following 1 row part chatgpt "how to do this simpler (set up the object on one row)"
-      const startButton = new Button(width / 2, height / 2, 100, 40, "Start", [
-        "#00ff00",
-        "#aaffaa",
-      ]);
-      if (startButton.listen()) {
-        gameState = "game";
-      }
-      startButton.draw();
-
-      break;
-    case "game":
-      background(img, windowWidth, windowHeight);
-      //necessary to center and calibrate click
-      centerX = (5 * (width / 12) + 25 * 2.5) / 2;
-      centerY = (5 * (width / 8) + 50) / 2;
-      if (units.length === 0) {
-        populatePlayingField();
-      }
-      drawPlayingField();
-      handleUnits();
-      timerCount();
-      pointsCount();
-
-      timer = timer - 1 / 60;
-      if (timer <= 0) {
-        gameState = "gameover";
-        centerX = 0;
-        centerY = 0;
-      }
-      break;
-
-    case "gameover":
-      background(34, 34, 34);
-
-      //gameover screen and button appears
-      drawTestRectangle(width / 2, height / 2, 200, 75, [255, 52, 52]);
-
-      //reset values
-      timer = 10;
-      points = 0;
-
-      //gameover button appears
-      if (createClickArea(width / 2, height / 2, 200, 75, 1)) {
-        gameState = "game";
-      }
-      break;
-  }
-
-  drawHand();
-}
-
-function handleUnits() {
-  for (let i = 0; i < unitCount; i++) {
-    if (units[i].lifetime > 0) {
-      units[i].lifetime -= 0.5;
-    } else {
-      units[i] = newUnit();
+    // const row = i % 3;
+    // const col = Math.floor(i / 3);
+    // const x = 25 * col;
+    // const y = 50 * row;
+    const col = this.index % 3;
+    const row = Math.floor(this.index / 3);
+    const y = (10 + this.h) * row;
+    const x = (10 + this.w) * col;
+    rect(x, y, this.w, this.h);
+    if (this.state != "inactive") {
+      console.log(this.state);
     }
   }
 }
 
+class Animal extends Unit {
+  constructor(index) {
+    super(index);
+    this.hues = ["#0f0", "#fffeee", "#99ff99"];
+  }
+  listen() {
+    super.listen();
+  }
+  draw() {
+    super.draw();
+  }
+}
+
+class BasicAnimal extends Animal {
+  constructor(index) {
+    super(index);
+    this.health = 1;
+    this.maxPets = this.health;
+    this.lifetime = 60;
+    this.pointsReward = 10;
+    this.timeReward = 5;
+  }
+}
+
+class Enemy extends Unit {
+  constructor(index, health, lifetime, pointsReward, timeReward) {
+    super(index, health, lifetime, pointsReward, timeReward);
+  }
+  listen() {
+    super.listen();
+  }
+  draw() {
+    super.draw();
+  }
+}
+
+class BasicEnemy extends Enemy {
+  constructor(index) {
+    super(index);
+    this.health = 1;
+    this.maxPets = this.health;
+    this.lifetime = 60;
+    this.pointsReward = 10;
+    this.timeReward = 5;
+  }
+}
+
+class Empty extends Unit {
+  constructor(position) {
+    super(position);
+    const timeFactor = 0.5 + Math.random() * 2;
+    this.lifetime = 150 * timeFactor;
+  }
+  listen() {
+    this.lifetime -= 1;
+    if (this.lifetime < 1) {
+      units[this.index] = newUnit(this.index);
+    }
+  }
+  draw() {}
+}
+
 function drawPlayingField() {
   for (let i = 0; i < unitCount; i++) {
-    drawHitBox(i, units[i]);
+    units[i].draw();
+    units[i].listen();
   }
 }
 
 //draws a wave of random units
 function populatePlayingField() {
   for (let i = 0; i < unitCount; i++) {
-    units.push(newUnit());
+    units.push(newUnit(i));
   }
 }
 
-// function deez() {}
-
-function newUnit() {
-  const type = Math.floor(Math.random() * 23);
-  const timeFactor = 0.5 + Math.random() * 2;
-  let unitType;
+function newUnit(i) {
+  const type = Math.floor(Math.random() * 15);
+  let unit;
   switch (type) {
     case 0:
-      unitType = { color: [255, 0, 0], lives: 1, lifetime: 100, points: 50 };
+      unit = new BasicAnimal(i);
       break;
     case 1:
-      unitType = { color: [0, 0, 255], lives: 10, lifetime: 100, points: 10 };
+      unit = new BasicEnemy(i);
       break;
-    case 2:
-    case 3:
-      unitType = { color: [0, 255, 0], lives: 15, lifetime: 100, points: 25 };
-      break;
-    default: //Empty unit
-      unitType = {
-        color: [0, 0, 0, 0],
-        lives: 3,
-        lifetime: 50 * timeFactor,
-        points: -1, //remove points for missing
-      };
+    default: //need to track empty cells with empty unit type
+      unit = new Empty(i);
       break;
   }
-  return unitType;
-}
-
-function drawHitBox(position, unit) {
-  const w = width / 12;
-  const h = width / 8;
-  const row = position % 3;
-  const col = Math.floor(position / 3);
-  const x = (w + 25) * col;
-  const y = (w + 50) * row;
-
-  //create the create click area
-  createClickArea(x, y, w, h, position);
-  push();
-  translate(centerX, centerY);
-  drawTestRectangle(x, y, w, h, unit.color);
-  pop();
+  return unit;
 }
 
 //doesnt create new
