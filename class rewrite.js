@@ -9,6 +9,7 @@ let img;
 
 function preload() {
   img = loadImage("img/cinnamonroll.jpg");
+  startImage = loadImage("img/startscreen.jpg");
 }
 
 function setup() {
@@ -17,6 +18,7 @@ function setup() {
   ellipseMode(CENTER);
   noStroke();
   noCursor();
+  textAlign(CENTER, CENTER);
 }
 
 function draw() {
@@ -126,9 +128,14 @@ class Button extends ClickBox {
     }
     rect(this.x, this.y, this.w, this.h, this.r);
     pop();
+    textSize(20);
+    fill(0);
+    //using this.text makes us being able to change the value inside, displays correct text
+    text(this.text, this.x, this.y);
   }
 }
 
+//Unsure whether to call Unit or frenemies since its friends and enemies
 class Unit extends ClickBox {
   constructor(index) {
     super();
