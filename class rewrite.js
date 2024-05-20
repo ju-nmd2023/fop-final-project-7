@@ -9,6 +9,7 @@ let img;
 
 function preload() {
   img = loadImage("img/cinnamonroll.jpg");
+  startImage = loadImage("img/startscreen.jpg");
 }
 
 function setup() {
@@ -17,6 +18,7 @@ function setup() {
   ellipseMode(CENTER);
   noStroke();
   noCursor();
+  textAlign(CENTER, CENTER);
 }
 
 class ClickBox {
@@ -74,9 +76,14 @@ class Button extends ClickBox {
     //Draw the rectangle
     rect(this.x, this.y, this.w, this.h, this.r);
     pop();
+    textSize(20);
+    fill(0);
+    //using this.text makes us being able to change the value inside, displays correct text
+    text(this.text, this.x, this.y);
   }
 }
 
+//Unsure whether to call Unit or frenemies since its friends and enemies
 class Unit extends ClickBox {
   constructor(x, y, health, lifetime, pointsReward, timeReward) {
     super(x, y);
@@ -167,6 +174,8 @@ function draw() {
 
   switch (gameState) {
     case "start":
+      image(startImage, 0, 0, windowWidth, windowHeight);
+      
       //following 1 row part chatgpt "how to do this simpler (set up the object on one row)"
       const startButton = new Button(width / 2, height / 2, 100, 40, "Start", [
         "#00ff00",
@@ -203,16 +212,24 @@ function draw() {
       background(34, 34, 34);
 
       //gameover screen and button appears
-      drawTestRectangle(width / 2, height / 2, 200, 75, [255, 52, 52]);
+      const gameoverButton = new Button(
+        width / 2,
+        height / 2,
+        100,
+        40,
+        "Try again",
+        ["#8B0000", "#ff0000"]
+      );
+      if (gameoverButton.listen()) {
+        gameState = "game";
+      }
+      //gameover button appears
+      gameoverButton.draw();
 
       //reset values
       timer = 10;
       points = 0;
 
-      //gameover button appears
-      if (createClickArea(width / 2, height / 2, 200, 75, 1)) {
-        gameState = "game";
-      }
       break;
   }
 
