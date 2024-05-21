@@ -188,6 +188,10 @@ class Unit extends ClickBox {
       } else {
         timer -= this.timeReward; //time reward is currently time punishment aswell
       }
+      this.lifeState = "dying";
+    }
+
+    if (this.animateY >= this.h && this.lifeState === "dying") {
       units[this.index] = new Empty(this.index);
     }
   }
@@ -215,14 +219,18 @@ class Unit extends ClickBox {
     //Draw the unit at the calculated coordinates, and calibrate to center
     this.x = centerX + (xSpacing + this.w) * (2 - row);
     this.y = centerY + (ySpacing + this.h) * (1 - col);
+
     if (this.lifeState === "birth") {
       if (this.animateY > 0) {
-        this.animateY = this.animateY - 1;
-        console.log(this.animateY);
+        this.animateY = this.animateY - 1.5;
       } else {
         this.animateY = 0;
         this.lifeState = "alive";
       }
+    }
+
+    if (this.lifeState === "dying") {
+      this.animateY = this.animateY + 1.5;
     }
 
     rect(this.x, this.y + this.animateY, this.w, this.h);
