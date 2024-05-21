@@ -3,16 +3,13 @@ let centerX = 0;
 let centerY = 0;
 let units = [];
 const unitCount = 15;
-let timer = 1;
+let timer = 10;
 let points = 0;
 let img;
 
-let gameTitle;
-
 function preload() {
   img = loadImage("img/cinnamonroll.jpg");
-  // const startImage = loadImage("img/startscreen.jpg");
-  gameTitle = loadFont("/fonts/gameTitle.ttf");
+  startImage = loadImage("img/startscreen.jpg");
 }
 
 function setup() {
@@ -35,13 +32,8 @@ function draw() {
 
   switch (gameState) {
     case "start":
-      textFont(gameTitle);
-      textSize(width / 50 + height / 50);
-      fill(0);
-      text("PET MICE SIMULATOR", width * 0.5, height * 0.1);
-
       //following 1 row part chatgpt "how to do this simpler (set up the object on one row)"
-      const startButton = new Button(width / 2, height / 2, 150, 50, "Start", [
+      const startButton = new Button(width / 2, height / 2, 100, 40, "Start", [
         "#00ff00",
         "#aaffaa",
       ]);
@@ -61,6 +53,8 @@ function draw() {
       //For loop in draw because it limits animations to framerate
       for (let i = 0; i < unitCount; i++) {
         //fix
+        beginMask();
+        endMask();
         drawPlayingField(unitCount - i - 1);
       }
       //for loop in the function for unlimited speed maybe not necessary
@@ -82,17 +76,11 @@ function draw() {
       //clear the array
       units = [];
 
-      textFont(gameTitle);
-      textSize(width / 50 + height / 50);
-      fill(255);
-      text("GAME OVER", width * 0.5, height * 0.1);
-
-
       const gameoverButton = new Button(
         width / 2,
         height / 2,
-        150,
-        50,
+        100,
+        40,
         "Try again",
         ["#ff0000", "#ffaaaa"]
       );
@@ -269,10 +257,7 @@ class Unit extends ClickBox {
       this.animateY = this.animateY + 1.7;
     }
     push();
-    // beginClip();
-    // rect(this.x, this.y, this.w * 1.25, this.h);
-    // rect(this.x, this.y * 1.25, this.w, this.h);
-    // endClip();
+
     rect(this.x, this.y + this.animateY, this.w, this.h);
     pop();
     if (this.state != "inactive") {
@@ -300,9 +285,9 @@ class BasicAnimal extends Animal {
     this.health = 5;
     this.maxPets = this.health;
     this.lifetime = 10;
-    this.pointsForKill = -25;
-    this.timeForKill = 0;
-    this.pointsForPet = 10;
+    this.pointsForKill = -50;
+    this.timeForKill = -5;
+    this.pointsForPet = 25;
     this.timeForDespawn = -5;
   }
 }
@@ -325,9 +310,9 @@ class BasicEnemy extends Enemy {
     this.health = 10;
     this.maxPets = this.health;
     this.lifetime = 10;
-    this.pointsForKill = 10;
+    this.pointsForKill = 0;
     this.timeForKill = 5;
-    this.pointsForPet = -25;
+    this.pointsForPet = -50;
     this.timeForDespawn = -10;
   }
 }
@@ -396,7 +381,7 @@ function drawHand() {
 
 function timerCount() {
   push();
-  fill(255,0,0);
+  fill(220, 100, 220);
   textSize(30);
   textAlign(LEFT);
   text("TIMER − " + Math.floor(timer) + "s", width * 0.7, height * 0.05);
@@ -404,7 +389,7 @@ function timerCount() {
 }
 function pointsCount() {
   push();
-  fill(255, 0, 0);
+  fill(220, 100, 220);
   textSize(30);
   textAlign(RIGHT);
   text("Points − " + points, width * 0.3, height * 0.05);
