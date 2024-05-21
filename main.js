@@ -3,13 +3,16 @@ let centerX = 0;
 let centerY = 0;
 let units = [];
 const unitCount = 15;
-let timer = 10;
+let timer = 1;
 let points = 0;
 let img;
 
+let gameTitle;
+
 function preload() {
   img = loadImage("img/cinnamonroll.jpg");
-  startImage = loadImage("img/startscreen.jpg");
+  // const startImage = loadImage("img/startscreen.jpg");
+  gameTitle = loadFont("/fonts/gameTitle.ttf");
 }
 
 function setup() {
@@ -32,8 +35,13 @@ function draw() {
 
   switch (gameState) {
     case "start":
+      textFont(gameTitle);
+      textSize(width / 50 + height / 50);
+      fill(0);
+      text("PET MICE SIMULATOR", width * 0.5, height * 0.1);
+
       //following 1 row part chatgpt "how to do this simpler (set up the object on one row)"
-      const startButton = new Button(width / 2, height / 2, 100, 40, "Start", [
+      const startButton = new Button(width / 2, height / 2, 150, 50, "Start", [
         "#00ff00",
         "#aaffaa",
       ]);
@@ -74,11 +82,17 @@ function draw() {
       //clear the array
       units = [];
 
+      textFont(gameTitle);
+      textSize(width / 50 + height / 50);
+      fill(255);
+      text("GAME OVER", width * 0.5, height * 0.1);
+
+
       const gameoverButton = new Button(
         width / 2,
         height / 2,
-        100,
-        40,
+        150,
+        50,
         "Try again",
         ["#ff0000", "#ffaaaa"]
       );
@@ -382,7 +396,7 @@ function drawHand() {
 
 function timerCount() {
   push();
-  fill(220, 100, 220);
+  fill(255,0,0);
   textSize(30);
   textAlign(LEFT);
   text("TIMER − " + Math.floor(timer) + "s", width * 0.7, height * 0.05);
@@ -390,7 +404,7 @@ function timerCount() {
 }
 function pointsCount() {
   push();
-  fill(220, 100, 220);
+  fill(255, 0, 0);
   textSize(30);
   textAlign(RIGHT);
   text("Points − " + points, width * 0.3, height * 0.05);
