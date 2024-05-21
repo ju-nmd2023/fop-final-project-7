@@ -92,7 +92,6 @@ class ClickBox {
   listen() {
     const wRadius = this.w / 2;
     const hRadius = this.h / 2;
-    console.log(this.state);
 
     if (
       mouseX < this.x + wRadius &&
@@ -104,6 +103,8 @@ class ClickBox {
       if (mouseIsPressed) {
         this.state = "click";
       }
+    } else {
+      this.state = "inactive";
     }
   }
 }
@@ -207,6 +208,7 @@ class Unit extends ClickBox {
     //Draw the unit at the calculated coordinates, and calibrate to center
     this.x = centerX + (xSpacing + this.w) * (2 - row);
     this.y = centerY + (ySpacing + this.h) * (1 - col);
+
     rect(this.x, this.y, this.w, this.h);
     if (this.state != "inactive") {
       console.log(this.state);
@@ -230,7 +232,7 @@ class Animal extends Unit {
 class BasicAnimal extends Animal {
   constructor(index) {
     super(index);
-    this.health = 1;
+    this.health = 5;
     this.maxPets = this.health;
     this.lifetime = 10;
     this.pointsReward = 10;
@@ -253,9 +255,9 @@ class Enemy extends Unit {
 class BasicEnemy extends Enemy {
   constructor(index) {
     super(index);
-    this.health = 1;
+    this.health = 10;
     this.maxPets = this.health;
-    this.lifetime = 30;
+    this.lifetime = 10;
     this.pointsReward = 10;
     this.timeReward = 5;
   }
@@ -265,10 +267,10 @@ class Empty extends Unit {
   constructor(position) {
     super(position);
     const timeFactor = 0.5 + Math.random() * 2;
-    this.lifetime = 150 * timeFactor;
+    this.lifetime = 3 * timeFactor;
   }
   listen() {
-    this.lifetime -= 1;
+    this.lifetime -= 1 / frameRate();
     if (this.lifetime < 1) {
       units[this.index] = newUnit(this.index);
     }
