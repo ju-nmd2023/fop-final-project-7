@@ -46,7 +46,12 @@ function draw() {
       if (units.length === 0) {
         populatePlayingField();
       }
-      drawPlayingField();
+      //For loop in draw because it limits animations to framerate
+      for (let i = 0; i < unitCount; i++) {
+        drawPlayingField(i);
+      }
+      //for loop in the function for unlimited speed maybe not necessary
+      updatePlayingField();
 
       timer = timer - 1 / 60;
       if (timer <= 0) {
@@ -155,12 +160,14 @@ class Unit extends ClickBox {
     this.index = index;
     this.w = (1.2 * width + height) / 34;
     this.h = (1.2 * width + height) / 22;
+    this.animateY = this.h;
     this.health = 1;
     this.maxPets = 1;
     this.lifetime = 1;
     this.pointsReward = 0;
     this.timeReward = 0;
     this.hues = ["#f00", "#fffeee", "#ff4747"];
+    this.lifeState = "birth";
   }
   listen() {
     super.listen();
@@ -215,7 +222,7 @@ class Unit extends ClickBox {
 
     if (this.lifeState === "birth") {
       if (this.animateY > 0) {
-        this.animateY = this.animateY - 1.5;
+        this.animateY = this.animateY - 3;
       } else {
         this.animateY = 0;
         this.lifeState = "alive";
@@ -223,10 +230,15 @@ class Unit extends ClickBox {
     }
 
     if (this.lifeState === "dying") {
-      this.animateY = this.animateY + 1.5;
+      this.animateY = this.animateY + 1.7;
     }
-
-    rect(this.x, this.y, this.w, this.h);
+    push();
+    beginClip();
+    rect(this.x, this.y, this.w * 1.25, this.h);
+    rect(this.x, this.y * 1.25, this.w, this.h);
+    endClip();
+    rect(this.x, this.y + this.animateY, this.w, this.h);
+    pop();
     if (this.state != "inactive") {
       console.log(this.state);
     }
@@ -297,9 +309,12 @@ class Empty extends Unit {
   }
 }
 
-function drawPlayingField() {
+function drawPlayingField(i) {
+  units[i].draw();
+}
+
+function updatePlayingField() {
   for (let i = 0; i < unitCount; i++) {
-    units[i].draw();
     units[i].listen();
   }
 }
