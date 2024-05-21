@@ -13,7 +13,6 @@ function preload() {
 }
 
 function setup() {
-  // createCanvas(windowWidth, windowHeight);
   frameRate(60);
   createCanvas(windowWidth, windowHeight);
   rectMode(CENTER);
@@ -21,6 +20,10 @@ function setup() {
   noStroke();
   noCursor();
   textAlign(CENTER, CENTER);
+  //following 3 lines written by CHATGPT
+  document.addEventListener("contextmenu", (e) => {
+    e.preventDefault();
+  });
 }
 
 function draw() {
@@ -49,7 +52,8 @@ function draw() {
       }
       //For loop in draw because it limits animations to framerate
       for (let i = 0; i < unitCount; i++) {
-        drawPlayingField(i);
+        //fix
+        drawPlayingField(unitCount - i - 1);
       }
       //for loop in the function for unlimited speed maybe not necessary
       updatePlayingField();
@@ -173,8 +177,10 @@ class Unit extends ClickBox {
     this.health = 1;
     this.maxPets = 1;
     this.lifetime = 1;
-    this.pointsReward = 0;
-    this.timeReward = 0;
+    this.pointsForKill = 0;
+    this.timeForKill = 0;
+    this.pointsForPet = 0;
+    this.timeForDespawn = 0;
     this.hues = ["#f00", "#fffeee", "#ff4747"];
     this.lifeState = "birth";
   }
@@ -184,18 +190,25 @@ class Unit extends ClickBox {
     //frameRate returns the amount of frames in a second, so this should remove 1 lifetime every second.
     this.lifetime -= 1 / frameRate();
 
-    if (this.state === "click" && (mouseButton === RIGHT || keyIsDown(SHIFT))) {
-      this.maxPets -= 1; //reduces pet counter by one on click
-    }
-    if (this.state === "click" && mouseButton === LEFT) {
-      this.health -= 1; //reduces health by one on click
-    }
-    if (this.health < 1 || this.lifetime < 1) {
-      if (this.health < 1) {
-        points += this.pointsReward;
-        timer += this.timeReward;
+    if (this.state === "click") {
+      if (keyIsDown(16)) {
+        this.maxPets -= 1; //reduces pet counter by one on click
       } else {
-        timer -= this.timeReward; //time reward is currently time punishment aswell
+        this.health -= 1;
+      }
+    }
+
+    if (
+      (this.health < 1 || this.lifetime < 1 || this.maxPets < 1) &&
+      this.lifeState !== "dying"
+    ) {
+      if (this.health < 1) {
+        points += this.pointsForKill;
+        timer += this.timeForKill;
+      } else if (this.maxPets < 1) {
+        points += this.pointsForPet;
+      } else {
+        timer += this.timeForDespawn;
       }
       this.lifeState = "dying";
     }
@@ -273,8 +286,10 @@ class BasicAnimal extends Animal {
     this.health = 5;
     this.maxPets = this.health;
     this.lifetime = 10;
-    this.pointsReward = 10;
-    this.timeReward = 5;
+    this.pointsForKill = -25;
+    this.timeForKill = 0;
+    this.pointsForPet = 10;
+    this.timeForDespawn = -5;
   }
 }
 
@@ -296,8 +311,10 @@ class BasicEnemy extends Enemy {
     this.health = 10;
     this.maxPets = this.health;
     this.lifetime = 10;
-    this.pointsReward = 10;
-    this.timeReward = 5;
+    this.pointsForKill = 10;
+    this.timeForKill = 5;
+    this.pointsForPet = -25;
+    this.timeForDespawn = -10;
   }
 }
 
