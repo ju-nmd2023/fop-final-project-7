@@ -3,7 +3,7 @@ let centerX = 0;
 let centerY = 0;
 let units = [];
 const unitCount = 15;
-let timer = 10;
+let timer = 1;
 let points = 0;
 let img;
 
@@ -38,7 +38,7 @@ function draw() {
       text("PET MICE SIMULATOR", width * 0.5, height * 0.1);
 
       //following 1 row part chatgpt "how to do this simpler (set up the object on one row)"
-      const startButton = new Button(width / 2, height / 2, 100, 40, "Start", [
+      const startButton = new Button(width / 2, height / 2, 150, 50, "Start", [
         "#00ff00",
         "#aaffaa",
       ]);
@@ -78,11 +78,17 @@ function draw() {
       //clear the array
       units = [];
 
+      textFont(gameTitle);
+      textSize(width / 50 + height / 50);
+      fill(255);
+      text("GAME OVER", width * 0.5, height * 0.1);
+
+
       const gameoverButton = new Button(
         width / 2,
         height / 2,
-        100,
-        40,
+        150,
+        50,
         "Try again",
         ["#ff0000", "#ffaaaa"]
       );
