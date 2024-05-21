@@ -42,6 +42,7 @@ function draw() {
       break;
     case "game":
       background(img, windowWidth, windowHeight);
+      drawHeadsUpDisplay();
 
       if (units.length === 0) {
         populatePlayingField();
@@ -66,6 +67,8 @@ function draw() {
       //reset values
       timer = 10;
       points = 0;
+      //clear the array
+      units = [];
 
       const gameoverButton = new Button(
         width / 2,
@@ -85,6 +88,12 @@ function draw() {
 
   drawHand();
 }
+
+function drawHeadsUpDisplay() {
+  timerCount();
+  pointsCount();
+}
+
 class ClickBox {
   constructor(x, y, w, h) {
     this.x = x;
@@ -233,10 +242,10 @@ class Unit extends ClickBox {
       this.animateY = this.animateY + 1.7;
     }
     push();
-    beginClip();
-    rect(this.x, this.y, this.w * 1.25, this.h);
-    rect(this.x, this.y * 1.25, this.w, this.h);
-    endClip();
+    // beginClip();
+    // rect(this.x, this.y, this.w * 1.25, this.h);
+    // rect(this.x, this.y * 1.25, this.w, this.h);
+    // endClip();
     rect(this.x, this.y + this.animateY, this.w, this.h);
     pop();
     if (this.state != "inactive") {
