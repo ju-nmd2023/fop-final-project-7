@@ -211,8 +211,8 @@ class Unit extends ClickBox {
     const centerX = width / 2;
     const centerY = height / 1.8;
     //Spacing between each hole
-    const xSpacing = width / 70;
-    const ySpacing = height / 70;
+    const xSpacing = width / 68;
+    const ySpacing = height / 34;
     //Calculating which row and column each unit index corresponds too
     const col = this.index % 3;
     const row = Math.floor(this.index / 3);
