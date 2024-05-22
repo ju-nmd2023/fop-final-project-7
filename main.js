@@ -7,15 +7,27 @@ let timer = 10;
 let points = 0;
 let img;
 let startImage;
-let pettingHand;
 let gameTitle;
+
+let defaultHand;
+let pettingHand;
+let punchHand;
+let shiftHand;
 
 function preload() {
   img = loadImage("img/cinnamonroll.jpg");
   // startImage = loadImage("img/startscreen.jpg");
   //Load hands
-  pettingHand = loadImage("./hands/handpetting.webp");
   gameTitle = loadFont("/fonts/gameTitle.ttf");
+
+  //If shift pressed
+  shiftHand = loadImage("./hands/Shift.webp");
+  //If mouse pressed
+  punchHand = loadImage("./hands/Punch.webp");
+  //If shift and mouse pressed
+  pettingHand = loadImage("./hands/Pet.webp");
+  //Else
+  defaultHand = loadImage("./hands/Normal.webp");
 }
 
 function setup() {
@@ -108,7 +120,6 @@ function draw() {
 
       break;
   }
-
   drawHand();
 }
 
@@ -212,8 +223,22 @@ class Unit extends ClickBox {
     if (this.state === "click") {
       if (keyIsDown(16)) {
         this.maxPets -= 1; //reduces pet counter by one on click
+        image(
+          pettingHand,
+          mouseX,
+          mouseY,
+          width / 9 + height / 9,
+          width / 9 + height / 9
+        );
       } else {
         this.health -= 1;
+        image(
+          defaultHand,
+          mouseX,
+          mouseY,
+          width / 9 + height / 9,
+          width / 9 + height / 9
+        );
       }
     }
 
@@ -408,21 +433,25 @@ function newUnit(i) {
 }
 
 function drawHand() {
-  push();
+  let activeHand = defaultHand;
+
+  if (mouseIsPressed) {
+    if (keyIsDown(16)) {
+      activeHand = pettingHand;
+    } else {
+      activeHand = punchHand;
+    }
+  } else if (keyIsDown(16)) {
+    activeHand = shiftHand;
+  }
+
   image(
-    pettingHand,
+    activeHand,
     mouseX,
     mouseY,
     width / 9 + height / 9,
     width / 9 + height / 9
   );
-  fill(255);
-  noCursor();
-  if (mouseIsPressed) {
-    fill(255, 0, 0);
-  }
-  // ellipse(mouseX, mouseY, width / 34 + height / 34);
-  pop();
 }
 
 function timerCount() {
