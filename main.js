@@ -1,12 +1,13 @@
-let gameState = "start";
+let gameState = "game";
 let centerX = 0;
 let centerY = 0;
 let units = [];
 const unitCount = 15;
 let timer = 30;
 let points = 0;
+
 let img;
-let startImage;
+let grassBackground;
 let gameTitle;
 
 let defaultHand;
@@ -15,8 +16,9 @@ let punchHand;
 let shiftHand;
 
 function preload() {
-  img = loadImage("img/cinnamonroll.jpg");
-  // startImage = loadImage("img/startscreen.jpg");
+  grassBackground = loadImage("./background/grassbackground.webp");
+  skyBackground = loadImage("./background/skybackground.webp");
+
   //Load hands
   gameTitle = loadFont("/fonts/gameTitle.ttf");
 
@@ -30,23 +32,45 @@ function preload() {
   defaultHand = loadImage("./hands/Normal.webp");
 
   //Enemies basic
-  enemiesBasicAnimalSprites = [loadImage("units/enemies/Basic/Happy.webp"),loadImage("units/enemies/Basic/Hover.webp"), loadImage("units/enemies/Basic/Normal.webp"),loadImage("units/enemies/Basic/Sad.webp")];
+  enemiesBasicAnimalSprites = [
+    loadImage("units/enemies/Basic/Happy.webp"),
+    loadImage("units/enemies/Basic/Hover.webp"),
+    loadImage("units/enemies/Basic/Normal.webp"),
+    loadImage("units/enemies/Basic/Sad.webp"),
+  ];
 
   //Viking
-  vikingAnimalSprites = [loadImage("units/enemies/Viking/Happy.webp"),loadImage("units/enemies/Viking/Hover.webp"), loadImage("units/enemies/Viking/Normal.webp"),loadImage("units/enemies/Viking/Sad.webp")];
-
+  vikingAnimalSprites = [
+    loadImage("units/enemies/Viking/Happy.webp"),
+    loadImage("units/enemies/Viking/Hover.webp"),
+    loadImage("units/enemies/Viking/Normal.webp"),
+    loadImage("units/enemies/Viking/Sad.webp"),
+  ];
 
   //Friendly animals :) basic
-  basicAnimalSprites = [loadImage("units/friends/Basic/Happy.webp"),loadImage("units/friends/Basic/Hover.webp"), loadImage("units/friends/Basic/Normal.webp"),loadImage("units/friends/Basic/Sad.webp")];
-  
+  basicAnimalSprites = [
+    loadImage("units/friends/Basic/Happy.webp"),
+    loadImage("units/friends/Basic/Hover.webp"),
+    loadImage("units/friends/Basic/Normal.webp"),
+    loadImage("units/friends/Basic/Sad.webp"),
+  ];
+
   //Green bow tie animals, cute
-  greenAnimalSprites = [loadImage("units/friends/Green/Happy.webp"),loadImage("units/friends/Green/Hover.webp"), loadImage("units/friends/Green/Normal.webp"),loadImage("units/friends/Green/Sad.webp")];
+  greenAnimalSprites = [
+    loadImage("units/friends/Green/Happy.webp"),
+    loadImage("units/friends/Green/Hover.webp"),
+    loadImage("units/friends/Green/Normal.webp"),
+    loadImage("units/friends/Green/Sad.webp"),
+  ];
 
   //Rich animals
-  richAnimalSprites = [loadImage("units/friends/Rich/Happy.webp"),loadImage("units/friends/Rich/Hover.webp"), loadImage("units/friends/Rich/Normal.webp"),loadImage("units/friends/Rich/Sad.webp")];
-
+  richAnimalSprites = [
+    loadImage("units/friends/Rich/Happy.webp"),
+    loadImage("units/friends/Rich/Hover.webp"),
+    loadImage("units/friends/Rich/Normal.webp"),
+    loadImage("units/friends/Rich/Sad.webp"),
+  ];
 }
-
 
 function setup() {
   frameRate(60);
@@ -87,7 +111,23 @@ function draw() {
 
       break;
     case "game":
-      background(img, windowWidth, windowHeight);
+      //CHATGPT helped with the coodrinates to get the grass to fit the way I wanted it to
+      image(
+        grassBackground,
+        width / 2,
+        height - (grassBackground.height * (width / grassBackground.width)) / 2,
+        width,
+        grassBackground.height * (width / grassBackground.width)
+      );
+
+      image(
+        skyBackground,
+        width / 2,
+        height - (skyBackground.height * (width / grassBackground.width)) / 2,
+        width,
+        grassBackground.height * (width / grassBackground.width)
+      );
+
       drawHeadsUpDisplay();
 
       if (units.length === 0) {
