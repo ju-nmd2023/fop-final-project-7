@@ -1,4 +1,5 @@
-let gameState = "game";
+let gameState = "start";
+// let mouseState = "neutral";
 let centerX = 0;
 let centerY = 0;
 let units = [];
@@ -14,6 +15,12 @@ let defaultHand;
 let pettingHand;
 let punchHand;
 let shiftHand;
+
+let basicEnemySprites;
+let vikingEnemySprites;
+let basicAnimalSprites;
+let greenAnimalSprites;
+let richAnimalSprites;
 
 function preload() {
   grassBackground = loadImage("./background/grassbackground.webp");
@@ -32,7 +39,7 @@ function preload() {
   defaultHand = loadImage("./hands/Normal.webp");
 
   //Enemies basic
-  enemiesBasicAnimalSprites = [
+  basicEnemySprites = [
     loadImage("units/enemies/Basic/Happy.webp"),
     loadImage("units/enemies/Basic/Hover.webp"),
     loadImage("units/enemies/Basic/Normal.webp"),
@@ -40,7 +47,7 @@ function preload() {
   ];
 
   //Viking
-  vikingAnimalSprites = [
+  vikingEnemySprites = [
     loadImage("units/enemies/Viking/Happy.webp"),
     loadImage("units/enemies/Viking/Hover.webp"),
     loadImage("units/enemies/Viking/Normal.webp"),
@@ -90,6 +97,7 @@ function setup() {
 function draw() {
   //background(143, 170, 244);
   background(215, 249, 255);
+  // mouseEventTracker();
 
   switch (gameState) {
     case "start":
@@ -270,6 +278,7 @@ class Unit extends ClickBox {
     this.timeForDespawn = 0;
     this.hues = ["#f00", "#fffeee", "#ff4747"];
     this.lifeState = "birth";
+    this.sprites = basicAnimalSprites;
   }
   listen() {
     super.listen();
@@ -305,17 +314,6 @@ class Unit extends ClickBox {
     }
   }
   draw() {
-    switch (this.state) {
-      case "hover":
-        fill(this.hues[1]);
-        break;
-      case "click":
-        fill(this.hues[2]);
-        break;
-      default:
-        fill(this.hues[0]);
-        break;
-    }
     //The coordinates of the center of the playing field
     const centerX = width / 2;
     const centerY = height / 1.8;
@@ -328,6 +326,20 @@ class Unit extends ClickBox {
     //Draw the unit at the calculated coordinates, and calibrate to center
     this.x = centerX + (xSpacing + this.w) * (2 - row);
     this.y = centerY + (ySpacing + this.h) * (1 - col);
+
+    let sprite = this.sprites[2];
+    switch (this.state) {
+      case "hover":
+        sprite = this.sprites[1];
+        break;
+      case "click":
+        if (keyIsDown(16)) {
+          sprite = this.sprites[0];
+        } else {
+          sprite = this.sprites[3];
+        }
+        break;
+    }
 
     if (this.lifeState === "birth") {
       if (this.animateY > 0) {
@@ -343,7 +355,7 @@ class Unit extends ClickBox {
     }
     push();
 
-    rect(this.x, this.y + this.animateY, this.w, this.h);
+    image(sprite, this.x, this.y + this.animateY, this.h);
     pop();
     if (this.state != "inactive") {
       console.log(this.state);
@@ -354,7 +366,6 @@ class Unit extends ClickBox {
 class Animal extends Unit {
   constructor(index) {
     super(index);
-    this.hues = ["#0f0", "#fffeee", "#99ff99"];
   }
 }
 
@@ -368,6 +379,7 @@ class BasicAnimal extends Animal {
     this.timeForKill = -5;
     this.pointsForPet = 25;
     this.timeForDespawn = -5;
+    this.sprites = basicAnimalSprites;
   }
 }
 class RichAnimal extends Animal {
@@ -380,10 +392,11 @@ class RichAnimal extends Animal {
     this.timeForKill = -5;
     this.pointsForPet = 100;
     this.timeForDespawn = -5;
+    this.sprites = richAnimalSprites;
   }
 }
 
-class BowtieAnimal extends Animal {
+class GreenAnimal extends Animal {
   constructor(index) {
     super(index);
     this.health = 1;
@@ -393,6 +406,7 @@ class BowtieAnimal extends Animal {
     this.timeForKill = -5;
     this.pointsForPet = 25;
     this.timeForDespawn = -5;
+    this.sprites = greenAnimalSprites;
   }
 }
 
@@ -412,9 +426,10 @@ class BasicEnemy extends Enemy {
     this.timeForKill = 0;
     this.pointsForPet = -50;
     this.timeForDespawn = -5;
+    this.sprites = basicEnemySprites;
   }
 }
-class ToughEnemy extends Enemy {
+class VikingEnemy extends Enemy {
   constructor(index) {
     super(index);
     this.health = 10;
@@ -424,6 +439,7 @@ class ToughEnemy extends Enemy {
     this.timeForKill = 15;
     this.pointsForPet = -50;
     this.timeForDespawn = -10;
+    this.sprites = vikingEnemySprites;
   }
 }
 
@@ -443,6 +459,12 @@ class Empty extends Unit {
     //Nothing to draw it should be invisible
   }
 }
+
+// function InputTracker() {
+//   if (mouseIsPressed && mouseState !== "click") {
+//     mouseState = "click";
+//   }
+// }
 
 function drawPlayingField(i) {
   units[i].draw();
@@ -479,7 +501,7 @@ function newUnit(i) {
 
     case 5:
     case 6:
-      unit = new ToughEnemy(i);
+      unit = new VikingEnemy(i);
       break;
 
     default: //need to track empty cells with empty unit type
