@@ -1,4 +1,5 @@
 let gameState = "start";
+let mouseWasPressed = false;
 // let mouseState = "neutral";
 let centerX = 0;
 let centerY = 0;
@@ -97,6 +98,7 @@ function setup() {
 function draw() {
   //background(143, 170, 244);
   background(215, 249, 255);
+  mousePressTracker();
   // mouseEventTracker();
 
   switch (gameState) {
@@ -212,8 +214,9 @@ class ClickBox {
       mouseY < this.y + hRadius &&
       mouseY > this.y - hRadius
     ) {
-      if (mouseIsPressed && this.state !== "click") {
+      if (mouseIsPressed && !mouseWasPressed) {
         this.state = "click";
+        mouseWasPressed = true;
       } else {
         this.state = "hover";
       }
@@ -421,7 +424,7 @@ class BasicEnemy extends Enemy {
     this.maxPets = this.health;
     this.lifetime = 7;
     this.pointsForKill = 0;
-    this.timeForKill = 0;
+    this.timeForKill = 5;
     this.pointsForPet = -50;
     this.timeForDespawn = -5;
     this.sprites = basicEnemySprites;
@@ -430,7 +433,7 @@ class BasicEnemy extends Enemy {
 class VikingEnemy extends Enemy {
   constructor(index) {
     super(index);
-    this.health = 10;
+    this.health = 5;
     this.maxPets = 3;
     this.lifetime = 15;
     this.pointsForKill = 0;
@@ -464,6 +467,12 @@ class Empty extends Unit {
 //   }
 // }
 
+function mousePressTracker() {
+  if (mouseWasPressed && !mouseIsPressed) {
+    mouseWasPressed = false;
+  }
+}
+
 function drawPlayingField(i) {
   units[i].draw();
 }
@@ -482,23 +491,28 @@ function populatePlayingField() {
 }
 
 function newUnit(i) {
-  const type = Math.floor(Math.random() * 15);
+  const type = Math.floor(Math.random() * 50);
   let unit;
   switch (type) {
     case 0:
     case 1:
+    case 2:
       unit = new BasicAnimal(i);
       break;
-    case 2:
+    case 3:
       unit = new RichAnimal(i);
       break;
-    case 3:
     case 4:
+    case 5:
+      unit = new GreenAnimal(i);
+      break;
+    case 6:
+    case 7:
+    case 8:
       unit = new BasicEnemy(i);
       break;
-
-    case 5:
-    case 6:
+    case 9:
+    case 10:
       unit = new VikingEnemy(i);
       break;
 
@@ -527,8 +541,8 @@ function drawHand() {
     activeHand,
     mouseX,
     mouseY,
-    width / 17 + height / 7,
-    width / 17 + height / 7
+    width / 26 + height / 11,
+    width / 26 + height / 11
   );
 }
 
