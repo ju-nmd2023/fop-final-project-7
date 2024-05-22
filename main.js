@@ -6,12 +6,28 @@ const unitCount = 15;
 let timer = 30;
 let points = 0;
 let img;
+let startImage;
 let gameTitle;
+
+let defaultHand;
+let pettingHand;
+let punchHand;
+let shiftHand;
 
 function preload() {
   img = loadImage("img/cinnamonroll.jpg");
   // startImage = loadImage("img/startscreen.jpg");
+  //Load hands
   gameTitle = loadFont("/fonts/gameTitle.ttf");
+
+  //If shift pressed
+  shiftHand = loadImage("./hands/Shift.webp");
+  //If mouse pressed
+  punchHand = loadImage("./hands/Punch.webp");
+  //If shift and mouse pressed
+  pettingHand = loadImage("./hands/Pet.webp");
+  //Else
+  defaultHand = loadImage("./hands/Normal.webp");
 }
 
 function setup() {
@@ -26,6 +42,7 @@ function setup() {
   document.addEventListener("contextmenu", (e) => {
     e.preventDefault();
   });
+  imageMode(CENTER);
 }
 
 function draw() {
@@ -102,7 +119,6 @@ function draw() {
 
       break;
   }
-
   drawHand();
 }
 
@@ -403,14 +419,26 @@ function newUnit(i) {
 }
 
 function drawHand() {
-  push();
-  fill(255);
-  noCursor();
+  // so that it is possible to change the value of default hand
+  let activeHand = defaultHand;
+
   if (mouseIsPressed) {
-    fill(255, 0, 0);
+    if (keyIsDown(16)) {
+      activeHand = pettingHand;
+    } else {
+      activeHand = punchHand;
+    }
+  } else if (keyIsDown(16)) {
+    activeHand = shiftHand;
   }
-  ellipse(mouseX, mouseY, width / 34 + height / 34);
-  pop();
+
+  image(
+    activeHand,
+    mouseX,
+    mouseY,
+    width / 17 + height / 7,
+    width / 17 + height / 7
+  );
 }
 
 function timerCount() {
