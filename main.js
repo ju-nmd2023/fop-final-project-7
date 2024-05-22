@@ -433,6 +433,7 @@ function newUnit(i) {
 }
 
 function drawHand() {
+  // so that it is possible to change the value of default hand
   let activeHand = defaultHand;
 
   if (mouseIsPressed) {
