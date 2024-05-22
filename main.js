@@ -6,8 +6,9 @@ let units = [];
 const unitCount = 15;
 let timer = 30;
 let points = 0;
+
 let img;
-let startImage;
+let grassBackground;
 let gameTitle;
 
 let defaultHand;
@@ -22,8 +23,9 @@ let greenAnimalSprites;
 let richAnimalSprites;
 
 function preload() {
-  img = loadImage("img/cinnamonroll.jpg");
-  // startImage = loadImage("img/startscreen.jpg");
+  grassBackground = loadImage("./background/grassbackground.webp");
+  skyBackground = loadImage("./background/skybackground.webp");
+
   //Load hands
   gameTitle = loadFont("/fonts/gameTitle.ttf");
 
@@ -117,7 +119,23 @@ function draw() {
 
       break;
     case "game":
-      background(img, windowWidth, windowHeight);
+      //CHATGPT helped with the coodrinates to get the grass to fit the way I wanted it to
+      image(
+        grassBackground,
+        width / 2,
+        height - (grassBackground.height * (width / grassBackground.width)) / 2,
+        width,
+        grassBackground.height * (width / grassBackground.width)
+      );
+
+      image(
+        skyBackground,
+        width / 2,
+        height - (skyBackground.height * (width / grassBackground.width)) / 2,
+        width,
+        grassBackground.height * (width / grassBackground.width)
+      );
+
       drawHeadsUpDisplay();
 
       if (units.length === 0) {
