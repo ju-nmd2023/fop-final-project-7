@@ -249,10 +249,6 @@ class Button extends ClickBox {
         fill(this.hues[0]);
         break;
     }
-    //Draw the rectangle
-    if (this.state != "inactive") {
-      console.log(this.state);
-    }
     rect(this.x, this.y, this.w, this.h, this.r);
     pop();
     textSize(20);
@@ -330,16 +326,17 @@ class Unit extends ClickBox {
 
     let sprite = this.sprites[2];
 
-    if (this.state !== "inactive") {
-      if (this.state === "hover") {
-        sprite = this.sprites[1];
-      } else if (mouseIsPressed) {
-        if (keyIsDown(16)) {
-          sprite = this.sprites[0];
-        } else {
-          sprite = this.sprites[3];
-        }
+    if (
+      this.state === "click" ||
+      (mouseIsPressed && this.state !== "inactive")
+    ) {
+      if (keyIsDown(16)) {
+        sprite = this.sprites[0];
+      } else {
+        sprite = this.sprites[3];
       }
+    } else if (this.state === "hover") {
+      sprite = this.sprites[1];
     }
 
     if (this.lifeState === "birth") {
