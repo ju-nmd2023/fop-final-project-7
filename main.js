@@ -28,7 +28,25 @@ function preload() {
   pettingHand = loadImage("./hands/Pet.webp");
   //Else
   defaultHand = loadImage("./hands/Normal.webp");
+
+  //Enemies basic
+  enemiesBasicAnimalSprites = [loadImage("units/enemies/Basic/Happy.webp"),loadImage("units/enemies/Basic/Hover.webp"), loadImage("units/enemies/Basic/Normal.webp"),loadImage("units/enemies/Basic/Sad.webp")];
+
+  //Viking
+  vikingAnimalSprites = [loadImage("units/enemies/Viking/Happy.webp"),loadImage("units/enemies/Viking/Hover.webp"), loadImage("units/enemies/Viking/Normal.webp"),loadImage("units/enemies/Viking/Sad.webp")];
+
+
+  //Friendly animals :) basic
+  basicAnimalSprites = [loadImage("units/friends/Basic/Happy.webp"),loadImage("units/friends/Basic/Hover.webp"), loadImage("units/friends/Basic/Normal.webp"),loadImage("units/friends/Basic/Sad.webp")];
+  
+  //Green bow tie animals, cute
+  greenAnimalSprites = [loadImage("units/friends/Green/Happy.webp"),loadImage("units/friends/Green/Hover.webp"), loadImage("units/friends/Green/Normal.webp"),loadImage("units/friends/Green/Sad.webp")];
+
+  //Rich animals
+  richAnimalSprites = [loadImage("units/friends/Rich/Happy.webp"),loadImage("units/friends/Rich/Hover.webp"), loadImage("units/friends/Rich/Normal.webp"),loadImage("units/friends/Rich/Sad.webp")];
+
 }
+
 
 function setup() {
   frameRate(60);
@@ -310,10 +328,23 @@ class Animal extends Unit {
 class BasicAnimal extends Animal {
   constructor(index) {
     super(index);
-    this.health = 5;
+    this.health = 1;
     this.maxPets = this.health;
     this.lifetime = 10;
     this.pointsForKill = -50;
+    this.timeForKill = -5;
+    this.pointsForPet = 25;
+    this.timeForDespawn = -5;
+  }
+}
+
+class BowtieAnimal extends Animal {
+  constructor(index) {
+    super(index);
+    this.health = 1;
+    this.maxPets = 5;
+    this.lifetime = 10;
+    this.pointsForKill = -100;
     this.timeForKill = -5;
     this.pointsForPet = 25;
     this.timeForDespawn = -5;
