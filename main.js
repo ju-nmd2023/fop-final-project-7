@@ -194,9 +194,10 @@ class ClickBox {
       mouseY < this.y + hRadius &&
       mouseY > this.y - hRadius
     ) {
-      this.state = "hover";
-      if (mouseIsPressed) {
+      if (mouseIsPressed && this.state !== "click") {
         this.state = "click";
+      } else {
+        this.state = "hover";
       }
     } else {
       this.state = "inactive";
@@ -248,8 +249,8 @@ class Unit extends ClickBox {
   constructor(index) {
     super();
     this.index = index;
-    this.w = (1.2 * width + height) / 34;
-    this.h = (1.2 * width + height) / 22;
+    this.w = (1.2 * width + height) * (43 / 1000);
+    this.h = (1.2 * width + height) * (54 / 1000);
     this.animateY = this.h;
     this.health = 1;
     this.maxPets = 1;
@@ -310,22 +311,22 @@ class Unit extends ClickBox {
     this.y = centerY + (ySpacing + this.h) * (1 - col);
 
     let sprite = this.sprites[2];
-    switch (this.state) {
-      case "hover":
+
+    if (this.state !== "inactive") {
+      if (this.state === "hover") {
         sprite = this.sprites[1];
-        break;
-      case "click":
+      } else if (mouseIsPressed) {
         if (keyIsDown(16)) {
           sprite = this.sprites[0];
         } else {
           sprite = this.sprites[3];
         }
-        break;
+      }
     }
 
     if (this.lifeState === "birth") {
       if (this.animateY > 0) {
-        this.animateY = this.animateY - 3;
+        this.animateY = this.animateY - 8;
       } else {
         this.animateY = 0;
         this.lifeState = "alive";
@@ -333,11 +334,11 @@ class Unit extends ClickBox {
     }
 
     if (this.lifeState === "dying") {
-      this.animateY = this.animateY + 1.7;
+      this.animateY = this.animateY + 8;
     }
     push();
 
-    image(sprite, this.x, this.y + this.animateY, this.h);
+    image(sprite, this.x, this.y + this.animateY, this.w, this.h);
     pop();
     if (this.state != "inactive") {
       console.log(this.state);
