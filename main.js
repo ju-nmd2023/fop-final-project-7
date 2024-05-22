@@ -6,10 +6,14 @@ const unitCount = 15;
 let timer = 10;
 let points = 0;
 let img;
+let startImage;
+let pettingHand;
 
 function preload() {
   img = loadImage("img/cinnamonroll.jpg");
   startImage = loadImage("img/startscreen.jpg");
+  //Load hands
+  pettingHand = loadImage("./hands/handpetting.webp");
 }
 
 function setup() {
@@ -24,6 +28,7 @@ function setup() {
   document.addEventListener("contextmenu", (e) => {
     e.preventDefault();
   });
+  imageMode(CENTER);
 }
 
 function draw() {
@@ -52,9 +57,6 @@ function draw() {
       }
       //For loop in draw because it limits animations to framerate
       for (let i = 0; i < unitCount; i++) {
-        //fix
-        beginMask();
-        endMask();
         drawPlayingField(unitCount - i - 1);
       }
       //for loop in the function for unlimited speed maybe not necessary
@@ -370,12 +372,19 @@ function newUnit(i) {
 
 function drawHand() {
   push();
+  image(
+    pettingHand,
+    mouseX,
+    mouseY,
+    width / 9 + height / 9,
+    width / 9 + height / 9
+  );
   fill(255);
   noCursor();
   if (mouseIsPressed) {
     fill(255, 0, 0);
   }
-  ellipse(mouseX, mouseY, width / 34 + height / 34);
+  // ellipse(mouseX, mouseY, width / 34 + height / 34);
   pop();
 }
 
