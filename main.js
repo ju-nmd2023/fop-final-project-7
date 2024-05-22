@@ -223,22 +223,8 @@ class Unit extends ClickBox {
     if (this.state === "click") {
       if (keyIsDown(16)) {
         this.maxPets -= 1; //reduces pet counter by one on click
-        image(
-          pettingHand,
-          mouseX,
-          mouseY,
-          width / 9 + height / 9,
-          width / 9 + height / 9
-        );
       } else {
         this.health -= 1;
-        image(
-          defaultHand,
-          mouseX,
-          mouseY,
-          width / 9 + height / 9,
-          width / 9 + height / 9
-        );
       }
     }
 
@@ -450,8 +436,8 @@ function drawHand() {
     activeHand,
     mouseX,
     mouseY,
-    width / 9 + height / 9,
-    width / 9 + height / 9
+    width / 17 + height / 7,
+    width / 17 + height / 7
   );
 }
 
