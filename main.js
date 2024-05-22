@@ -3,7 +3,7 @@ let centerX = 0;
 let centerY = 0;
 let units = [];
 const unitCount = 15;
-let timer = 10;
+let timer = 30;
 let points = 0;
 let img;
 let gameTitle;
@@ -60,13 +60,7 @@ function draw() {
       }
       //For loop in draw because it limits animations to framerate
       for (let i = 0; i < unitCount; i++) {
-        // const mask = new Mask(i);
-        // push();
-        // beginMask();
-        // mask.draw();
-        // endMask();
         drawPlayingField(unitCount - i - 1);
-        // pop();
       }
       //for loop in the function for unlimited speed maybe not necessary
       updatePlayingField();
@@ -95,8 +89,6 @@ function draw() {
       const gameoverButton = new Button(
         width / 2,
         height / 2,
-        100,
-        40,
         150,
         50,
         "Try again",
@@ -290,18 +282,12 @@ class Animal extends Unit {
     super(index);
     this.hues = ["#0f0", "#fffeee", "#99ff99"];
   }
-  listen() {
-    super.listen();
-  }
-  draw() {
-    super.draw();
-  }
 }
 
 class BasicAnimal extends Animal {
   constructor(index) {
     super(index);
-    this.health = 5;
+    this.health = 1;
     this.maxPets = this.health;
     this.lifetime = 10;
     this.pointsForKill = -50;
@@ -310,49 +296,45 @@ class BasicAnimal extends Animal {
     this.timeForDespawn = -5;
   }
 }
+class RichAnimal extends Animal {
+  constructor(index) {
+    super(index);
+    this.health = 1;
+    this.maxPets = 5;
+    this.lifetime = 10;
+    this.pointsForKill = -50;
+    this.timeForKill = -5;
+    this.pointsForPet = 100;
+    this.timeForDespawn = -5;
+  }
+}
 
 class Enemy extends Unit {
   constructor(index, health, lifetime, pointsReward, timeReward) {
     super(index, health, lifetime, pointsReward, timeReward);
-  }
-  listen() {
-    super.listen();
-  }
-  draw() {
-    super.draw();
-  }
-}
-
-class Mask extends Unit {
-  constructor(index) {
-    super(index);
-  }
-  draw() {
-    const centerX = width / 2;
-    const centerY = height / 1.8;
-    //Spacing between each hole
-    const xSpacing = width / 68;
-    const ySpacing = height / 34;
-    //Calculating which row and column each unit index corresponds too
-    const col = this.index % 3;
-    const row = Math.floor(this.index / 3);
-    //Draw the unit at the calculated coordinates, and calibrate to center
-    this.x = centerX + (xSpacing + this.w) * (2 - row);
-    this.y = centerY + (ySpacing + this.h) * (1 - col);
-
-    rect(this.x, this.y, this.w * 1.25, this.h);
-    rect(this.x, this.y / 1.25, this.w, this.h);
   }
 }
 
 class BasicEnemy extends Enemy {
   constructor(index) {
     super(index);
-    this.health = 10;
+    this.health = 1;
     this.maxPets = this.health;
-    this.lifetime = 10;
+    this.lifetime = 7;
     this.pointsForKill = 0;
-    this.timeForKill = 5;
+    this.timeForKill = 0;
+    this.pointsForPet = -50;
+    this.timeForDespawn = -5;
+  }
+}
+class ToughEnemy extends Enemy {
+  constructor(index) {
+    super(index);
+    this.health = 10;
+    this.maxPets = 3;
+    this.lifetime = 15;
+    this.pointsForKill = 0;
+    this.timeForKill = 15;
     this.pointsForPet = -50;
     this.timeForDespawn = -10;
   }
@@ -397,11 +379,22 @@ function newUnit(i) {
   let unit;
   switch (type) {
     case 0:
+    case 1:
       unit = new BasicAnimal(i);
       break;
-    case 1:
+    case 2:
+      unit = new RichAnimal(i);
+      break;
+    case 3:
+    case 4:
       unit = new BasicEnemy(i);
       break;
+
+    case 5:
+    case 6:
+      unit = new ToughEnemy(i);
+      break;
+
     default: //need to track empty cells with empty unit type
       unit = new Empty(i);
       break;
