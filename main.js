@@ -9,6 +9,7 @@ let timer = 30;
 let points = 0;
 
 let img;
+let startBackground;
 let levelBackground;
 let gameTitle;
 
@@ -24,10 +25,11 @@ let greenAnimalSprites;
 let richAnimalSprites;
 
 function preload() {
+  startBackground = loadImage("./background/startscreen.webp");
   levelBackground = loadImage("./background/backgroundgame.webp");
 
   //Load hands
-  gameTitle = loadFont("/fonts/gameTitle.ttf");
+  gameTitle = loadFont("/fonts/gamefont.TTF");
 
   //If shift pressed
   shiftHand = loadImage("./hands/Shift.webp");
@@ -102,15 +104,17 @@ function draw() {
 
   switch (gameState) {
     case "start":
+      drawStartScreen();
+
       //following 1 row part chatgpt "how to do this simpler (set up the object on one row)"
-      const startButton = new Button(width / 2, height / 2, 150, 50, "Start", [
-        "#00ff00",
+      const startButton = new Button(width / 2, height / 2, 165, 52, "START", [
+        "#82cb54",
         "#aaffaa",
       ]);
 
       textFont(gameTitle);
-      textSize(width / 50 + height / 50);
-      fill(0);
+      textSize(width / 30 + height / 30);
+      fill(124, 77, 46);
       text("PET MICE SIMULATOR", width * 0.5, height * 0.1);
 
       if (startButton.listen()) {
@@ -155,7 +159,7 @@ function draw() {
       break;
 
     case "gameover":
-      background(34, 34, 34);
+      background(124, 77, 46);
       //reset values
       timer = 10;
       points = 0;
@@ -165,15 +169,15 @@ function draw() {
       textFont(gameTitle);
       textSize(width / 50 + height / 50);
       fill(255);
-      text("GAME OVER", width * 0.5, height * 0.1);
+      text("GAME OVER :(", width * 0.5, height * 0.1);
 
       const gameoverButton = new Button(
         width / 2,
         height / 2,
-        150,
-        50,
+        185,
+        52,
         "Try again",
-        ["#ff0000", "#ffaaaa"]
+        ["#a50000", "#cc0a0a"]
       );
 
       if (gameoverButton.listen()) {
@@ -184,6 +188,20 @@ function draw() {
       break;
   }
   drawHand();
+}
+
+function drawStartScreen() {
+  push();
+  imageMode(CORNER);
+  background(82, 211, 253);
+  image(
+    startBackground,
+    0,
+    height - 1.8 * startBackground.height,
+    width,
+    height
+  );
+  pop();
 }
 
 function drawHeadsUpDisplay() {
@@ -223,7 +241,7 @@ class ClickBox {
 }
 
 class Button extends ClickBox {
-  constructor(x, y, w, h, text, hues, radius = 20, callback = true) {
+  constructor(x, y, w, h, text, hues, radius = 25, callback = true) {
     super(x, y, w, h);
     this.text = text;
     this.hues = hues;
@@ -251,7 +269,7 @@ class Button extends ClickBox {
     rect(this.x, this.y, this.w, this.h, this.r);
     pop();
     textSize(20);
-    fill(0);
+    fill(255);
     //using this.text makes us being able to change the value inside, displays correct text
     text(this.text, this.x, this.y);
   }
@@ -547,7 +565,7 @@ function timerCount() {
   fill(120, 190, 74);
   textSize(30);
   textAlign(LEFT);
-  text("TIMER − " + Math.floor(timer) + "s", width * 0.7, height * 0.05);
+  text("TIMER " + Math.floor(timer) + "s", width * 0.7, height * 0.05);
   pop();
 }
 function pointsCount() {
@@ -555,6 +573,6 @@ function pointsCount() {
   fill(120, 190, 74);
   textSize(30);
   textAlign(RIGHT);
-  text("Points − " + points, width * 0.3, height * 0.05);
+  text("POINTS" + points, width * 0.3, height * 0.05);
   pop();
 }
