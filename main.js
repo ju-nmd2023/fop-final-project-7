@@ -216,7 +216,11 @@ function drawStartScreen() {
   image(vikingEnemySprites[1], width / 1.8, height / 1.18);
   textSize(width / 100 + height / 100);
   fill(124, 77, 46);
-  text("Press shift and click to pet cute hamsters", width * 0.5, height * 0.77);
+  text(
+    "Press shift and click to pet cute hamsters",
+    width * 0.5,
+    height * 0.77
+  );
   text("Click to attack evil hamsters", width * 0.5, height * 0.91);
 
   if (startButton.listen()) {
@@ -610,7 +614,7 @@ function populatePlayingField() {
 
 function newUnit(i) {
   //If player is doing well more units spawn
-  const chance = Math.max(20, 120 - Math.max(50, timer * 1.5));
+  const chance = Math.max(20, 150 - Math.max(50, timer * 1.5));
   const type = Math.floor(Math.random() * chance);
   let unit;
   switch (type) {
