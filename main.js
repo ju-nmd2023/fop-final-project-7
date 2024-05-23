@@ -426,6 +426,8 @@ class Unit extends Square {
 
     if (this.lifeState === "dying") {
       this.animateY = this.animateY + 8;
+      text(oldPoints - points + " pts", this.x, this.y - this.animateY);
+      text(oldTimer - timer + " s", this.x, this.y - 25 - this.animateY);
     }
 
     image(sprite, this.x, this.y + this.animateY, this.w, this.h);
@@ -570,7 +572,7 @@ function populatePlayingField() {
 
 function newUnit(i) {
   //If player is doing well more units spawn
-  const chance = Math.max(20, 100 - timer);
+  const chance = Math.max(20, 100 - Math.max(50, timer));
   const type = Math.floor(Math.random() * chance);
   let unit;
   switch (type) {
@@ -646,9 +648,10 @@ function pointsDisplay() {
 
   //Animate points tally
   if (oldPoints < points) oldPoints++;
-  else {
-    oldPoints = points;
+  else if (oldPoints !== points) {
+    oldPoints -= 1;
   }
+
   push();
   fill(120, 190, 74);
   textSize(30);
