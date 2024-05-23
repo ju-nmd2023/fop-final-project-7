@@ -1,4 +1,4 @@
-let gameState = "start";
+let gameState = "gameover";
 let mouseWasPressed = false;
 // let mouseState = "neutral";
 
@@ -151,15 +151,70 @@ function draw() {
 
       textSize(width / 50 + height / 50);
       fill(255);
-      text("GAME OVER :(", width * 0.5, height * 0.1);
+      text("GOOD GAME!", width * 0.5, height * 0.1);
+      //display cute hamsters
+
+      const spriteW = basicAnimalSprites[0].width * 2;
+      const spriteH = basicAnimalSprites[0].height * 2;
+      const spacing = spriteW * 1.2 - 21.5;
+
+      //display gameover animals
+      image(
+        basicAnimalSprites[2],
+        width / 2 - spacing * 2,
+        height / 3,
+        spriteW,
+        spriteH
+      );
+      image(
+        richAnimalSprites[1],
+        width / 2 - spacing * 3,
+        height / 3,
+        spriteW,
+        spriteH
+      );
+
+      image(
+        greenAnimalSprites[0],
+        width / 2 - spacing,
+        height / 3,
+        spriteW,
+        spriteH
+      );
+
+      //display enemy hamsters
+      image(
+        basicEnemySprites[1],
+        width / 2 + spacing,
+        height / 3,
+        spriteW,
+        spriteH
+      );
+      image(
+        vikingEnemySprites[1],
+        width / 2 + spacing * 2,
+        height / 3,
+        spriteW,
+        spriteH
+      );
+      image(
+        vikingEnemySprites[0],
+        width / 2 + spacing * 3,
+        height / 3,
+        spriteW,
+        spriteH
+      );
+
+      textSize(width / 100 + height / 100);
+      fill(124, 77, 46);
 
       const gameoverButton = new Button(
         width / 2,
-        height / 2,
-        185,
-        52,
-        "Try again",
-        ["#a50000", "#cc0a0a"]
+        height / 1.7,
+        190,
+        54,
+        "Play again",
+        ["#00c46b", "#32f29c"]
       );
 
       if (gameoverButton.listen()) {
@@ -249,7 +304,7 @@ function resetValues() {
   //reset values
   timer = 60;
   points = 0;
-  oldTimer = 0;
+  oldTimer = timer;
   oldPoints = 0;
   //clear the array
   units = [];
