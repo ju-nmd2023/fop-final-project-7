@@ -1,11 +1,11 @@
-let gameState = "start";
+let gameState = "game";
 let mouseWasPressed = false;
 // let mouseState = "neutral";
 let centerX = 0;
 let centerY = 0;
 let units = [];
 const unitCount = 15;
-let timer = 30;
+let timer = 3000;
 let points = 0;
 
 let img;
@@ -142,8 +142,8 @@ function draw() {
       //   grassBackground.height * (width / grassBackground.width)
       // );
 
+      drawBackground(levelBackground);
       drawHeadsUpDisplay();
-      drawBackground();
 
       if (units.length === 0) {
         populatePlayingField();
@@ -209,17 +209,19 @@ function drawStartScreen() {
   pop();
 }
 
-function drawBackground() {
+function drawBackground(img) {
   push();
   imageMode(CORNER);
   background(130, 203, 84);
+  const ratio = img.height / img.width;
 
   image(
     levelBackground,
     0,
-    height - 2.5 * levelBackground.height,
+    0 - (width / 4 + (height / 4) * ratio),
     width,
-    height
+    //Math for the height with same ratio as image done by chat gpt
+    width * ratio
   );
   pop();
 }
