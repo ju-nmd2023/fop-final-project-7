@@ -125,11 +125,7 @@ function draw() {
       break;
     case "game":
       //CHATGPT helped with the coodrinates to get the grass to fit the way I wanted it to
-      push();
-      imageMode(CORNER);
-      background(130, 203, 84);
-      image(levelBackground, 0, 0 - 1.5 * height, width, width);
-      pop();
+
       // image(
       //   skyBackground,
       //   width / 2,
@@ -139,6 +135,7 @@ function draw() {
       // );
 
       drawHeadsUpDisplay();
+      drawBackground();
 
       if (units.length === 0) {
         populatePlayingField();
@@ -198,6 +195,21 @@ function drawStartScreen() {
     startBackground,
     0,
     height - 1.8 * startBackground.height,
+    width,
+    height
+  );
+  pop();
+}
+
+function drawBackground() {
+  push();
+  imageMode(CORNER);
+  background(130, 203, 84);
+
+  image(
+    levelBackground,
+    0,
+    height - 2.5 * levelBackground.height,
     width,
     height
   );
