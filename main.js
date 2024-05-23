@@ -32,7 +32,7 @@ function preload() {
   levelBackground = loadImage("./background/backgroundgame.webp");
 
   //Load hands
-  gameTitle = loadFont("/fonts/gamefont.TTF");
+  // gameTitle = loadFont("/fonts/gamefont.TTF");
 
   //If shift pressed
   shiftHand = loadImage("./hands/Shift.webp");
@@ -46,7 +46,7 @@ function preload() {
   //Mole hole parts
   holeTextures = [
     loadImage("./hole/HoleBack.webp"),
-    loadImage("./hole/Holefront.webp"),
+    // loadImage("./hole/Holefront.webp"),
   ];
 
   //Enemies basic
@@ -131,11 +131,15 @@ function draw() {
       textFont(gameTitle);
       textSize(width / 50 + height / 40);
       fill(124, 77, 46);
-      text("HAM-HAM GARDEN INVASION", width * 0.5, height * 0.1);
+      text("HAMSTER GARDEN INVASION", width * 0.5, height * 0.1);
 
       textSize(width / 100 + height / 100);
       fill(124, 77, 46);
-      text("Press shift and click to pet cute hamsters", width * 0.5, height * 0.8);
+      text(
+        "Press shift and click to pet cute hamsters",
+        width * 0.5,
+        height * 0.8
+      );
       text("Click to attack evil hamsters", width * 0.5, height * 0.9);
 
       if (startButton.listen()) {
@@ -145,16 +149,6 @@ function draw() {
 
       break;
     case "game":
-      //CHATGPT helped with the coodrinates to get the grass to fit the way I wanted it to
-
-      // image(
-      //   skyBackground,
-      //   width / 2,
-      //   (grassBackground.height * (width / grassBackground.width)) / 2,
-      //   width,
-      //   grassBackground.height * (width / grassBackground.width)
-      // );
-
       drawBackground(levelBackground);
       drawHeadsUpDisplay();
 
