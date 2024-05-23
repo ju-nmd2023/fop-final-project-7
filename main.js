@@ -7,6 +7,7 @@ let units = [];
 const unitCount = 15;
 let timer = 30;
 let points = 0;
+let value = 0;
 
 let img;
 let startBackground;
@@ -121,9 +122,9 @@ function draw() {
       ]);
 
       textFont(gameTitle);
-      textSize(width / 30 + height / 30);
+      textSize(width / 50 + height / 40);
       fill(124, 77, 46);
-      text("PET MICE SIMULATOR", width * 0.5, height * 0.1);
+      text("HAM-HAM GARDEN INVASION", width * 0.5, height * 0.1);
 
       if (startButton.listen()) {
         gameState = "game";
@@ -213,8 +214,8 @@ function drawStartScreen() {
 }
 
 function drawHeadsUpDisplay() {
-  timerCount();
-  pointsCount();
+  timerDisplay();
+  pointsDisplay();
 }
 
 class ClickBox {
@@ -585,7 +586,7 @@ function drawHand() {
   );
 }
 
-function timerCount() {
+function timerDisplay() {
   push();
   fill(120, 190, 74);
   textSize(30);
@@ -593,11 +594,16 @@ function timerCount() {
   text("TIMER " + Math.floor(timer) + "s", width * 0.7, height * 0.05);
   pop();
 }
-function pointsCount() {
+function pointsDisplay() {
+  //Animate points tally
+  if (value < points) value++;
+  else {
+    value = points;
+  }
   push();
   fill(120, 190, 74);
   textSize(30);
   textAlign(RIGHT);
-  text("POINTS" + points, width * 0.3, height * 0.05);
+  text("POINTS-" + value, width * 0.3, height * 0.05);
   pop();
 }
