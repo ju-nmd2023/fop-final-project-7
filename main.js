@@ -1,4 +1,4 @@
-let gameState = "gameover";
+let gameState = "start";
 let mouseWasPressed = false;
 // let mouseState = "neutral";
 let centerX = 0;
@@ -29,7 +29,7 @@ let greenAnimalSprites;
 let richAnimalSprites;
 
 function preload() {
-  logo = loadImage("./logo.webp");
+  logo = loadImage("./background/logo.webp");
 
   startBackground = loadImage("./background/startscreen.webp");
   levelBackground = loadImage("./background/backgroundgame.webp");
