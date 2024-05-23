@@ -123,8 +123,6 @@ function draw() {
     case "start":
       drawStartScreen();
 
-      //following 1 row part chatgpt "how to do this simpler (set up the object on one row)"
-
       break;
     case "game":
       drawBackground();
@@ -163,10 +161,13 @@ function drawStartScreen() {
   image(img, 0, 0, (height / ratio) * 1.1, height * 1.1);
   pop();
 
+  //following 1 row part chatgpt "how to do this simpler (set up the object on one row)"
   const startButton = new Button(width / 2, height / 1.77, 165, 52, "START", [
     "#82cb54",
     "#aaffaa",
   ]);
+
+  drawInstructions();
 
   image(
     logo,
