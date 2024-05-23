@@ -1,4 +1,4 @@
-let gameState = "gameover";
+let gameState = "start";
 let mouseWasPressed = false;
 // let mouseState = "neutral";
 
@@ -8,6 +8,7 @@ let timer = 60;
 let oldTimer = timer;
 let points = 0;
 let oldPoints = 0;
+let displayScore = 0;
 
 let logo;
 let startBackground;
@@ -145,83 +146,7 @@ function draw() {
       break;
 
     case "gameover":
-      gameOverScreen();
-      background(82, 56, 45);
-      resetValues();
-
-      textSize(width / 50 + height / 50);
-      fill(255);
-      text("GOOD GAME!", width * 0.5, height * 0.1);
-      //display cute hamsters
-
-      const spriteW = basicAnimalSprites[0].width * 2;
-      const spriteH = basicAnimalSprites[0].height * 2;
-      const spacing = spriteW * 1.2 - 21.5;
-
-      //display gameover animals
-      image(
-        basicAnimalSprites[2],
-        width / 2 - spacing * 2,
-        height / 3,
-        spriteW,
-        spriteH
-      );
-      image(
-        richAnimalSprites[1],
-        width / 2 - spacing * 3,
-        height / 3,
-        spriteW,
-        spriteH
-      );
-
-      image(
-        greenAnimalSprites[0],
-        width / 2 - spacing,
-        height / 3,
-        spriteW,
-        spriteH
-      );
-
-      //display enemy hamsters
-      image(
-        basicEnemySprites[1],
-        width / 2 + spacing,
-        height / 3,
-        spriteW,
-        spriteH
-      );
-      image(
-        vikingEnemySprites[1],
-        width / 2 + spacing * 2,
-        height / 3,
-        spriteW,
-        spriteH
-      );
-      image(
-        vikingEnemySprites[0],
-        width / 2 + spacing * 3,
-        height / 3,
-        spriteW,
-        spriteH
-      );
-
-      textSize(width / 100 + height / 100);
-      fill(124, 77, 46);
-
-      const gameoverButton = new Button(
-        width / 2,
-        height / 1.7,
-        190,
-        54,
-        "Play again",
-        ["#00c46b", "#32f29c"]
-      );
-
-      if (gameoverButton.listen()) {
-        gameState = "game";
-      }
-      gameoverButton.draw();
-
+      drawGameOverScreen();
       break;
   }
   drawHand();
@@ -275,6 +200,97 @@ function drawStartScreen() {
   startButton.draw();
 }
 
+function drawGameOverScreen() {
+  background(82, 56, 45);
+
+  textSize(width / 50 + height / 50);
+  fill(255);
+  text("GOOD GAME!", width * 0.5, height * 0.1);
+  textSize(width / 70 + height / 70);
+
+  //score increases slowly
+  if (displayScore < points) {
+    displayScore += 2;
+  } else if (displayScore > points) {
+    displayScore = points;
+  }
+
+  text("Score - " + displayScore, width * 0.5, height * 0.17);
+  //display cute hamsters
+  drawSpriteRow();
+
+  textSize(width / 100 + height / 100);
+  fill(124, 77, 46);
+
+  const gameoverButton = new Button(
+    width / 2,
+    height / 1.7,
+    190,
+    54,
+    "Play again",
+    ["#00c46b", "#32f29c"]
+  );
+
+  if (gameoverButton.listen()) {
+    resetValues();
+    gameState = "game";
+  }
+  gameoverButton.draw();
+}
+
+function drawSpriteRow() {
+  const spriteW = basicAnimalSprites[0].width * 2;
+  const spriteH = basicAnimalSprites[0].height * 2;
+  const spacing = spriteW * 1.2 - 21.5;
+
+  //display gameover animals
+  image(
+    basicAnimalSprites[2],
+    width / 2 - spacing * 2,
+    height / 3,
+    spriteW,
+    spriteH
+  );
+  image(
+    richAnimalSprites[1],
+    width / 2 - spacing * 3,
+    height / 3,
+    spriteW,
+    spriteH
+  );
+
+  image(
+    greenAnimalSprites[0],
+    width / 2 - spacing,
+    height / 3,
+    spriteW,
+    spriteH
+  );
+
+  //display enemy hamsters
+  image(
+    basicEnemySprites[1],
+    width / 2 + spacing,
+    height / 3,
+    spriteW,
+    spriteH
+  );
+  image(
+    vikingEnemySprites[1],
+    width / 2 + spacing * 2,
+    height / 3,
+    spriteW,
+    spriteH
+  );
+  image(
+    vikingEnemySprites[0],
+    width / 2 + spacing * 3,
+    height / 3,
+    spriteW,
+    spriteH
+  );
+}
+
 function drawBackground() {
   const img = levelBackground;
   push();
@@ -301,7 +317,7 @@ function drawHeadsUpDisplay() {
 }
 
 function resetValues() {
-  //reset values
+  //base values
   timer = 60;
   points = 0;
   oldTimer = timer;
