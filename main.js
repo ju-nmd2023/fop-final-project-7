@@ -1,11 +1,11 @@
-let gameState = "game";
+let gameState = "start";
 let mouseWasPressed = false;
 // let mouseState = "neutral";
 let centerX = 0;
 let centerY = 0;
 let units = [];
 const unitCount = 15;
-let timer = 3000;
+let timer = 30;
 let points = 0;
 
 let img;
@@ -102,6 +102,11 @@ function setup() {
     e.preventDefault();
   });
   imageMode(CENTER);
+}
+
+//3 lines of code from https://p5js.org/reference/#/p5/windowResized
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
 }
 
 function draw() {
@@ -218,7 +223,8 @@ function drawBackground(img) {
   image(
     levelBackground,
     0,
-    0 - (width / 4 + (height / 4) * ratio),
+    // 0 - (width / 4 + (height / 4) * ratio),
+    0 + Math.min(width, height) / 150 - Math.max(width, height) / 3,
     width,
     //Math for the height with same ratio as image done by chat gpt
     width * ratio
