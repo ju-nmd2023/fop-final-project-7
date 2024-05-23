@@ -5,7 +5,7 @@ let centerX = 0;
 let centerY = 0;
 let units = [];
 const unitCount = 15;
-let timer = 30;
+let timer = 60;
 let oldTimer = timer;
 let points = 0;
 let oldPoints = 0;
@@ -239,7 +239,7 @@ function drawHeadsUpDisplay() {
 
 function resetValues() {
   //reset values
-  timer = 30;
+  timer = 60;
   points = 0;
   oldTimer = 0;
   oldPoints = 0;
@@ -333,36 +333,6 @@ class Square extends ClickBox {
   }
   listen() {
     super.listen();
-
-    //frameRate returns the amount of frames in a second, so this should remove 1 lifetime every second.
-    this.lifetime -= 1 / frameRate();
-
-    if (this.state === "click") {
-      if (keyIsDown(16)) {
-        this.maxPets -= 1; //reduces pet counter by one on click
-      } else {
-        this.health -= 1;
-      }
-    }
-
-    if (
-      (this.health < 1 || this.lifetime < 1 || this.maxPets < 1) &&
-      this.lifeState !== "dying"
-    ) {
-      if (this.health < 1) {
-        points += this.pointsForKill;
-        timer += this.timeForKill;
-      } else if (this.maxPets < 1) {
-        points += this.pointsForPet;
-      } else {
-        timer += this.timeForDespawn;
-      }
-      this.lifeState = "dying";
-    }
-
-    if (this.animateY >= this.h && this.lifeState === "dying") {
-      units[this.index] = new Empty(this.index);
-    }
   }
   draw() {
     //The coordinates of the center of the playing field
@@ -386,6 +356,59 @@ class Square extends ClickBox {
 class Unit extends Square {
   constructor(index) {
     super(index);
+  }
+  listen() {
+    super.listen();
+
+    //frameRate returns the amount of frames in a second, so this should remove 1 lifetime every second.
+    this.lifetime -= 1 / frameRate();
+
+    if (this.state === "click") {
+      if (keyIsDown(16)) {
+        this.maxPets -= 1; //reduces pet counter by one on click
+      } else {
+        this.health -= 1;
+      }
+    }
+
+    if (
+      (this.health < 1 || this.lifetime < 1 || this.maxPets < 1) &&
+      this.lifeState !== "dying"
+    ) {
+      if (this.health < 1) {
+        points += this.pointsForKill;
+        timer += this.timeForKill;
+        text(
+          this.pointsForKill - (points - oldPoints) + " pts",
+          this.x,
+          this.y - this.animateY
+        );
+        text(
+          this.timeForKill - (timer - oldTimer) + " s",
+          this.x,
+          this.y - 25 - this.animateY
+        );
+      } else if (this.maxPets < 1) {
+        points += this.pointsForPet;
+        text(
+          this.pointsForPet - (points - oldPoints) + " pts",
+          this.x,
+          this.y - this.animateY
+        );
+      } else {
+        timer += this.timeForDespawn;
+        text(
+          this.timeForDespawn - (points - oldPoints) + " s",
+          this.x,
+          this.y - this.animateY
+        );
+      }
+      this.lifeState = "dying";
+    }
+
+    if (this.animateY >= this.h && this.lifeState === "dying") {
+      units[this.index] = new Empty(this.index);
+    }
   }
 
   draw() {
@@ -413,11 +436,25 @@ class Unit extends Square {
         this.lifeState = "alive";
       }
     }
-
+    //Animate on death, and show text with points and time gained / lost
     if (this.lifeState === "dying") {
       this.animateY = this.animateY + 8;
-      text(oldPoints - points + " pts", this.x, this.y - this.animateY);
-      text(oldTimer - timer + " s", this.x, this.y - 25 - this.animateY);
+      if (this.health < 1) {
+        if (this.pointsForKill !== 0) {
+          text(this.pointsForKill + " pts", this.x, this.y - this.animateY);
+        }
+        if (this.timeForKill !== 0) {
+          text(this.timeForKill + " s", this.x, this.y - 25 - this.animateY);
+        }
+      } else if (this.maxPets < 1) {
+        if (this.pointsForPet !== 0) {
+          text(this.pointsForPet + " pts", this.x, this.y - this.animateY);
+        }
+      } else {
+        if (this.timeForDespawn !== 0) {
+          text(this.timeForDespawn + " s", this.x, this.y - this.animateY);
+        }
+      }
     }
 
     image(sprite, this.x, this.y + this.animateY, this.w, this.h);
@@ -446,10 +483,10 @@ class BasicAnimal extends Animal {
     this.health = 3;
     this.maxPets = 1;
     this.lifetime = 10;
-    this.pointsForKill = -25;
-    this.timeForKill = -10;
+    this.pointsForKill = -35;
+    this.timeForKill = -35;
     this.pointsForPet = 25;
-    this.timeForDespawn = -5;
+    this.timeForDespawn = -15;
     this.sprites = basicAnimalSprites;
   }
 }
@@ -460,9 +497,9 @@ class RichAnimal extends Animal {
     this.maxPets = 7;
     this.lifetime = 7;
     this.pointsForKill = -50;
-    this.timeForKill = -10;
+    this.timeForKill = -50;
     this.pointsForPet = 100;
-    this.timeForDespawn = -5;
+    this.timeForDespawn = -15;
     this.sprites = richAnimalSprites;
   }
 }
@@ -474,9 +511,9 @@ class GreenAnimal extends Animal {
     this.maxPets = 5;
     this.lifetime = 10;
     this.pointsForKill = -100;
-    this.timeForKill = -15;
+    this.timeForKill = -50;
     this.pointsForPet = 25;
-    this.timeForDespawn = -5;
+    this.timeForDespawn = -25;
     this.sprites = greenAnimalSprites;
   }
 }
@@ -562,7 +599,7 @@ function populatePlayingField() {
 
 function newUnit(i) {
   //If player is doing well more units spawn
-  const chance = Math.max(20, 100 - Math.max(50, timer));
+  const chance = Math.max(20, 120 - Math.max(50, timer * 1.5));
   const type = Math.floor(Math.random() * chance);
   let unit;
   switch (type) {
