@@ -96,6 +96,8 @@ function setup() {
   ellipseMode(CENTER);
   noStroke();
   noCursor();
+
+  textFont(gameTitle);
   textAlign(CENTER, CENTER);
   //following 3 lines written by CHATGPT
   document.addEventListener("contextmenu", (e) => {
@@ -129,6 +131,11 @@ function draw() {
       textSize(width / 30 + height / 30);
       fill(124, 77, 46);
       text("PET MICE SIMULATOR", width * 0.5, height * 0.1);
+
+      textSize(width / 100 + height / 100);
+      fill(124, 77, 46);
+      text("Press shift and click to pet cute hamsters", width * 0.5, height * 0.8);
+      text("Click to attack evil hamsters", width * 0.5, height * 0.9);
 
       if (startButton.listen()) {
         gameState = "game";
@@ -169,14 +176,9 @@ function draw() {
       break;
 
     case "gameover":
-      background(124, 77, 46);
-      //reset values
-      timer = 10;
-      points = 0;
-      //clear the array
-      units = [];
+      background(82, 56, 45);
+      resetValues();
 
-      textFont(gameTitle);
       textSize(width / 50 + height / 50);
       fill(255);
       text("GAME OVER :(", width * 0.5, height * 0.1);
@@ -237,6 +239,13 @@ function drawHeadsUpDisplay() {
   pointsCount();
 }
 
+function resetValues() {
+  //reset values
+  timer = 30;
+  points = 0;
+  //clear the array
+  units = [];
+}
 class ClickBox {
   constructor(x, y, w, h) {
     this.x = x;
@@ -432,11 +441,11 @@ class Animal extends Unit {
 class BasicAnimal extends Animal {
   constructor(index) {
     super(index);
-    this.health = 1;
-    this.maxPets = this.health;
+    this.health = 3;
+    this.maxPets = 1;
     this.lifetime = 10;
-    this.pointsForKill = -50;
-    this.timeForKill = -5;
+    this.pointsForKill = -25;
+    this.timeForKill = -10;
     this.pointsForPet = 25;
     this.timeForDespawn = -5;
     this.sprites = basicAnimalSprites;
@@ -446,10 +455,10 @@ class RichAnimal extends Animal {
   constructor(index) {
     super(index);
     this.health = 1;
-    this.maxPets = 5;
-    this.lifetime = 10;
+    this.maxPets = 7;
+    this.lifetime = 7;
     this.pointsForKill = -50;
-    this.timeForKill = -5;
+    this.timeForKill = -10;
     this.pointsForPet = 100;
     this.timeForDespawn = -5;
     this.sprites = richAnimalSprites;
@@ -463,7 +472,7 @@ class GreenAnimal extends Animal {
     this.maxPets = 5;
     this.lifetime = 10;
     this.pointsForKill = -100;
-    this.timeForKill = -5;
+    this.timeForKill = -15;
     this.pointsForPet = 25;
     this.timeForDespawn = -5;
     this.sprites = greenAnimalSprites;
