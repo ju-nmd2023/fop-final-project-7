@@ -190,7 +190,7 @@ function drawStartScreen() {
   );
   pop();
 
-  const startButton = new Button(width / 2, height / 2, 165, 52, "START", [
+  const startButton = new Button(width / 2, height / 1.77, 165, 52, "START", [
     "#82cb54",
     "#aaffaa",
   ]);
@@ -203,10 +203,21 @@ function drawStartScreen() {
     ((Math.max(width, height) / 3) * logo.height) / logo.width
   );
 
+  //display cute hamsters
+  image(basicAnimalSprites[1], width / 1.8, height / 1.4);
+  image(basicAnimalSprites[2], width / 2.1, height / 1.4);
+  image(richAnimalSprites[0], width / 1.9, height / 1.4);
+  image(greenAnimalSprites[0], width / 2, height / 1.4);
+
+  //display enemy hamsters
+  image(basicEnemySprites[2], width / 2.1, height / 1.18);
+  image(basicEnemySprites[3], width / 1.9, height / 1.18);
+  image(vikingEnemySprites[0], width / 2, height / 1.18);
+  image(vikingEnemySprites[1], width / 1.8, height / 1.18);
   textSize(width / 100 + height / 100);
   fill(124, 77, 46);
-  text("Press shift and click to pet cute hamsters", width * 0.5, height * 0.8);
-  text("Click to attack evil hamsters", width * 0.5, height * 0.9);
+  text("Press shift and click to pet cute hamsters", width * 0.5, height * 0.77);
+  text("Click to attack evil hamsters", width * 0.5, height * 0.91);
 
   if (startButton.listen()) {
     gameState = "game";
