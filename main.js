@@ -392,7 +392,7 @@ class Unit extends Square {
     image(sprite, this.x, this.y + this.animateY, this.w, this.h);
     push();
     //Same as background
-    fill(255);
+    fill(130, 203, 84);
     rect(this.x, this.y + this.h + 2, this.w, this.h);
     pop();
     image(holeTextures[1], this.x, this.y + this.h / 2.4, this.w, this.w);
