@@ -140,7 +140,7 @@ function draw() {
         width * 0.5,
         height * 0.8
       );
-      text("Click to attack evil hamsters", width * 0.5, height * 0.9);
+      text("Click to attack evil rats", width * 0.5, height * 0.9);
 
       if (startButton.listen()) {
         gameState = "game";
