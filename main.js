@@ -6,10 +6,11 @@ let centerY = 0;
 let units = [];
 const unitCount = 15;
 let timer = 30;
+let oldTimer = timer;
 let points = 0;
-let value = 0;
+let oldPoints = 0;
 
-let img;
+let logo;
 let startBackground;
 let levelBackground;
 let gameTitle;
@@ -28,6 +29,8 @@ let greenAnimalSprites;
 let richAnimalSprites;
 
 function preload() {
+  logo = loadImage("./logo.webp");
+
   startBackground = loadImage("./background/startscreen.webp");
   levelBackground = loadImage("./background/backgroundgame.webp");
 
@@ -123,25 +126,6 @@ function draw() {
       drawStartScreen();
 
       //following 1 row part chatgpt "how to do this simpler (set up the object on one row)"
-      const startButton = new Button(width / 2, height / 2, 165, 52, "START", [
-        "#82cb54",
-        "#aaffaa",
-      ]);
-
-      textFont(gameTitle);
-      textSize(width / 50 + height / 40);
-      fill(124, 77, 46);
-      text("HAM-HAM GARDEN INVASION", width * 0.5, height * 0.1);
-
-      textSize(width / 100 + height / 100);
-      fill(124, 77, 46);
-      text("Press shift and click to pet cute hamsters", width * 0.5, height * 0.8);
-      text("Click to attack evil hamsters", width * 0.5, height * 0.9);
-
-      if (startButton.listen()) {
-        gameState = "game";
-      }
-      startButton.draw();
 
       break;
     case "game":
@@ -215,6 +199,29 @@ function drawStartScreen() {
     height
   );
   pop();
+
+  const startButton = new Button(width / 2, height / 2, 165, 52, "START", [
+    "#82cb54",
+    "#aaffaa",
+  ]);
+
+  image(
+    logo,
+    width / 2,
+    height / 4,
+    Math.max(width, height) / 3,
+    ((Math.max(width, height) / 3) * logo.height) / logo.width
+  );
+
+  textSize(width / 100 + height / 100);
+  fill(124, 77, 46);
+  text("Press shift and click to pet cute hamsters", width * 0.5, height * 0.8);
+  text("Click to attack evil hamsters", width * 0.5, height * 0.9);
+
+  if (startButton.listen()) {
+    gameState = "game";
+  }
+  startButton.draw();
 }
 
 function drawBackground(img) {
@@ -244,6 +251,8 @@ function resetValues() {
   //reset values
   timer = 30;
   points = 0;
+  oldTimer = 0;
+  oldPoints = 0;
   //clear the array
   units = [];
 }
@@ -560,7 +569,9 @@ function populatePlayingField() {
 }
 
 function newUnit(i) {
-  const type = Math.floor(Math.random() * 50);
+  //If player is doing well more units spawn
+  const chance = Math.max(20, 100 - timer);
+  const type = Math.floor(Math.random() * chance);
   let unit;
   switch (type) {
     case 0:
@@ -616,23 +627,32 @@ function drawHand() {
 }
 
 function timerDisplay() {
+  if (oldTimer < timer) oldTimer++;
+  else {
+    oldTimer = timer;
+  }
+
   push();
   fill(120, 190, 74);
   textSize(30);
   textAlign(LEFT);
-  text("TIMER " + Math.floor(timer) + "s", width * 0.7, height * 0.05);
+  text("TIME-" + Math.floor(oldTimer) + "s", width * 0.7, height * 0.05);
   pop();
 }
 function pointsDisplay() {
+  if (points < 0) {
+    points = 0;
+  }
+
   //Animate points tally
-  if (value < points) value++;
+  if (oldPoints < points) oldPoints++;
   else {
-    value = points;
+    oldPoints = points;
   }
   push();
   fill(120, 190, 74);
   textSize(30);
   textAlign(RIGHT);
-  text("POINTS-" + value, width * 0.3, height * 0.05);
+  text("POINTS-" + oldPoints, width * 0.3, height * 0.05);
   pop();
 }
