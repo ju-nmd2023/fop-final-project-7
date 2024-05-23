@@ -131,7 +131,7 @@ function draw() {
       image(
         skyBackground,
         width / 2,
-        height - (skyBackground.height * (width / grassBackground.width)) / 2,
+        (grassBackground.height * (width / grassBackground.width)) / 2,
         width,
         grassBackground.height * (width / grassBackground.width)
       );
