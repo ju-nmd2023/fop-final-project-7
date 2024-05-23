@@ -34,9 +34,9 @@ function preload() {
   startBackground = loadImage("./background/startscreen.webp");
   levelBackground = loadImage("./background/backgroundgame.webp");
 
-  //Load hands
-  gameTitle = loadFont("/fonts/gamefont.TTF");
+  gameTitle = loadFont("./fonts/gamefont.ttf");
 
+  //Load hands
   //If shift pressed
   shiftHand = loadImage("./hands/Shift.webp");
   //If mouse pressed
@@ -49,7 +49,7 @@ function preload() {
   //Mole hole parts
   holeTextures = [
     loadImage("./hole/HoleBack.webp"),
-    loadImage("./hole/Holefront.webp"),
+    loadImage("./hole/HoleFront.webp"),
   ];
 
   //Enemies basic
@@ -129,16 +129,6 @@ function draw() {
 
       break;
     case "game":
-      //CHATGPT helped with the coodrinates to get the grass to fit the way I wanted it to
-
-      // image(
-      //   skyBackground,
-      //   width / 2,
-      //   (grassBackground.height * (width / grassBackground.width)) / 2,
-      //   width,
-      //   grassBackground.height * (width / grassBackground.width)
-      // );
-
       drawBackground(levelBackground);
       drawHeadsUpDisplay();
 

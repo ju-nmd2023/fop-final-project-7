@@ -1,14 +1,15 @@
-
 @font-face {
   font-family: "Arcade";
   src: url("/fonts/gamefont.TTF") format("truetype");
-
 }
 
 body {
   margin: 0;
   overflow: hidden;
+
+
 }
+
 canvas {
   margin: 0;
   width: 100%;
