@@ -1,8 +1,7 @@
 let gameState = "start";
 let mouseWasPressed = false;
 // let mouseState = "neutral";
-let centerX = 0;
-let centerY = 0;
+
 let units = [];
 const unitCount = 15;
 let timer = 60;
@@ -103,10 +102,6 @@ function setup() {
 
   textFont(gameTitle);
   textAlign(CENTER, CENTER);
-  //following 3 lines written by CHATGPT
-  document.addEventListener("contextmenu", (e) => {
-    e.preventDefault();
-  });
   imageMode(CENTER);
 }
 
@@ -129,7 +124,7 @@ function draw() {
 
       break;
     case "game":
-      drawBackground(levelBackground);
+      drawBackground();
       drawHeadsUpDisplay();
 
       if (units.length === 0) {
@@ -146,12 +141,11 @@ function draw() {
       //Changed so it is same as on screen timer
       if (oldTimer <= 0) {
         gameState = "gameover";
-        centerX = 0;
-        centerY = 0;
       }
       break;
 
     case "gameover":
+      gameOverScreen();
       background(82, 56, 45);
       resetValues();
 
@@ -281,16 +275,18 @@ function drawStartScreen() {
   startButton.draw();
 }
 
-function drawBackground(img) {
+function drawBackground() {
+  const img = levelBackground;
   push();
   imageMode(CORNER);
+
+  //Same color as the grass, useful to the game scaleable
   background(130, 203, 84);
   const ratio = img.height / img.width;
 
   image(
     levelBackground,
     0,
-    // 0 - (width / 4 + (height / 4) * ratio),
     0 + Math.min(width, height) / 150 - Math.max(width, height) / 3,
     width,
     //Math for the height with same ratio as image done by chat gpt
@@ -319,6 +315,7 @@ class ClickBox {
     this.y = y;
     this.w = w;
     this.h = h;
+    //Default inactive meaning cursor isnt inside coordinates
     this.state = "inactive";
   }
 
@@ -326,6 +323,8 @@ class ClickBox {
     const wRadius = this.w / 2;
     const hRadius = this.h / 2;
 
+    //check if cursor is inside coordinates
+    //measures from centerpoint which is why radius is used. Probably radius is wrong word
     if (
       mouseX < this.x + wRadius &&
       mouseX > this.x - wRadius &&
@@ -666,7 +665,7 @@ function populatePlayingField() {
 
 function newUnit(i) {
   //If player is doing well more units spawn
-  const chance = Math.max(20, 120 - Math.max(50, timer * 1.5));
+  const chance = Math.max(20, 150 - Math.max(50, timer * 1.5));
   const type = Math.floor(Math.random() * chance);
   let unit;
   switch (type) {
