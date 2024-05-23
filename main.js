@@ -31,9 +31,9 @@ function preload() {
   startBackground = loadImage("./background/startscreen.webp");
   levelBackground = loadImage("./background/backgroundgame.webp");
 
-  //Load hands
-  // gameTitle = loadFont("/fonts/gamefont.TTF");
+  gameTitle = loadFont("./fonts/gamefont.ttf");
 
+  //Load hands
   //If shift pressed
   shiftHand = loadImage("./hands/Shift.webp");
   //If mouse pressed
@@ -46,7 +46,7 @@ function preload() {
   //Mole hole parts
   holeTextures = [
     loadImage("./hole/HoleBack.webp"),
-    // loadImage("./hole/Holefront.webp"),
+     loadImage("./hole/Holefront.webp"),
   ];
 
   //Enemies basic
