@@ -217,7 +217,7 @@ function drawStartScreen() {
   textSize(width / 100 + height / 100);
   fill(124, 77, 46);
   text("Press shift and click to pet cute hamsters", width * 0.5, height * 0.77);
-  text("Click to attack evil hamsters", width * 0.5, height * 0.91);
+  text("Click to attack evil rats", width * 0.5, height * 0.91);
 
   if (startButton.listen()) {
     gameState = "game";
