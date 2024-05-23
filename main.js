@@ -13,6 +13,8 @@ let startBackground;
 let levelBackground;
 let gameTitle;
 
+let holeTextures;
+
 let defaultHand;
 let pettingHand;
 let punchHand;
@@ -39,6 +41,12 @@ function preload() {
   pettingHand = loadImage("./hands/Pet.webp");
   //Else
   defaultHand = loadImage("./hands/Normal.webp");
+
+  //Mole hole parts
+  holeTextures = [
+    loadImage("./hole/HoleBack.webp"),
+    loadImage("./hole/Holefront.webp"),
+  ];
 
   //Enemies basic
   basicEnemySprites = [
@@ -288,7 +296,7 @@ class Button extends ClickBox {
 }
 
 //Unsure whether to call Unit or frenemies since its friends and enemies
-class Unit extends ClickBox {
+class Square extends ClickBox {
   constructor(index) {
     super();
     this.index = index;
@@ -353,6 +361,18 @@ class Unit extends ClickBox {
     this.x = centerX + (xSpacing + this.w) * (2 - row);
     this.y = centerY + (ySpacing + this.h) * (1 - col);
 
+    //Always draw hole
+    image(holeTextures[0], this.x, this.y + this.h / 2.4, this.w, this.w);
+  }
+}
+
+class Unit extends Square {
+  constructor(index) {
+    super(index);
+  }
+
+  draw() {
+    super.draw();
     let sprite = this.sprites[2];
 
     if (
@@ -380,10 +400,15 @@ class Unit extends ClickBox {
     if (this.lifeState === "dying") {
       this.animateY = this.animateY + 8;
     }
-    push();
 
     image(sprite, this.x, this.y + this.animateY, this.w, this.h);
+    push();
+    //Same as background
+    fill(130, 203, 84);
+    rect(this.x, this.y + this.h + 2, this.w, this.h);
     pop();
+    image(holeTextures[1], this.x, this.y + this.h / 2.4, this.w, this.w);
+
     if (this.state != "inactive") {
       console.log(this.state);
     }
@@ -470,7 +495,7 @@ class VikingEnemy extends Enemy {
   }
 }
 
-class Empty extends Unit {
+class Empty extends Square {
   constructor(position) {
     super(position);
     const timeFactor = 0.5 + Math.random() * 2;
@@ -483,7 +508,7 @@ class Empty extends Unit {
     }
   }
   draw() {
-    //Nothing to draw it should be invisible
+    super.draw();
   }
 }
 
