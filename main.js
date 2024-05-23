@@ -143,7 +143,8 @@ function draw() {
       updatePlayingField();
 
       timer = timer - 1 / 60;
-      if (timer <= 0) {
+      //Changed so it is same as on screen timer
+      if (oldTimer <= 0) {
         gameState = "gameover";
         centerX = 0;
         centerY = 0;
@@ -181,13 +182,9 @@ function drawStartScreen() {
   push();
   imageMode(CORNER);
   background(82, 211, 253);
-  image(
-    startBackground,
-    0,
-    height - 1.8 * startBackground.height,
-    width,
-    height
-  );
+  const img = startBackground;
+  const ratio = img.height / img.width;
+  image(img, 0, 0, (height / ratio) * 1.1, height * 1.1);
   pop();
 
   const startButton = new Button(width / 2, height / 1.77, 165, 52, "START", [
@@ -204,19 +201,23 @@ function drawStartScreen() {
   );
 
   //display cute hamsters
-  image(basicAnimalSprites[1], width / 1.8, height / 1.4);
-  image(basicAnimalSprites[2], width / 2.1, height / 1.4);
-  image(richAnimalSprites[0], width / 1.9, height / 1.4);
-  image(greenAnimalSprites[0], width / 2, height / 1.4);
+  image(basicAnimalSprites[1], width / 2 + 60, height / 1.4);
+  image(basicAnimalSprites[2], width / 2 - 60, height / 1.4);
+  image(richAnimalSprites[0], width / 2 + 20, height / 1.4);
+  image(greenAnimalSprites[0], width / 2 - 20, height / 1.4);
 
   //display enemy hamsters
-  image(basicEnemySprites[2], width / 2.1, height / 1.18);
-  image(basicEnemySprites[3], width / 1.9, height / 1.18);
-  image(vikingEnemySprites[0], width / 2, height / 1.18);
-  image(vikingEnemySprites[1], width / 1.8, height / 1.18);
+  image(basicEnemySprites[2], width / 2 + 60, height / 1.18);
+  image(basicEnemySprites[3], width / 2 - 20, height / 1.18);
+  image(vikingEnemySprites[0], width / 2 + 20, height / 1.18);
+  image(vikingEnemySprites[1], width / 2 - 60, height / 1.18);
   textSize(width / 100 + height / 100);
   fill(124, 77, 46);
-  text("Press shift and click to pet cute hamsters", width * 0.5, height * 0.77);
+  text(
+    "Press shift and click to pet cute hamsters",
+    width * 0.5,
+    height * 0.77
+  );
   text("Click to attack evil rats", width * 0.5, height * 0.91);
 
   if (startButton.listen()) {
@@ -491,13 +492,13 @@ class Animal extends Unit {
 class BasicAnimal extends Animal {
   constructor(index) {
     super(index);
-    this.health = 3;
+    this.health = 2;
     this.maxPets = 1;
     this.lifetime = 10;
     this.pointsForKill = -35;
-    this.timeForKill = -35;
+    this.timeForKill = -25;
     this.pointsForPet = 25;
-    this.timeForDespawn = -15;
+    this.timeForDespawn = -10;
     this.sprites = basicAnimalSprites;
   }
 }
@@ -508,9 +509,9 @@ class RichAnimal extends Animal {
     this.maxPets = 7;
     this.lifetime = 7;
     this.pointsForKill = -50;
-    this.timeForKill = -50;
+    this.timeForKill = -25;
     this.pointsForPet = 100;
-    this.timeForDespawn = -15;
+    this.timeForDespawn = -10;
     this.sprites = richAnimalSprites;
   }
 }
@@ -524,7 +525,7 @@ class GreenAnimal extends Animal {
     this.pointsForKill = -100;
     this.timeForKill = -50;
     this.pointsForPet = 25;
-    this.timeForDespawn = -25;
+    this.timeForDespawn = -15;
     this.sprites = greenAnimalSprites;
   }
 }
@@ -544,7 +545,7 @@ class BasicEnemy extends Enemy {
     this.pointsForKill = 0;
     this.timeForKill = 5;
     this.pointsForPet = -50;
-    this.timeForDespawn = -5;
+    this.timeForDespawn = -10;
     this.sprites = basicEnemySprites;
   }
 }
@@ -557,7 +558,7 @@ class VikingEnemy extends Enemy {
     this.pointsForKill = 0;
     this.timeForKill = 15;
     this.pointsForPet = -50;
-    this.timeForDespawn = -10;
+    this.timeForDespawn = -15;
     this.sprites = vikingEnemySprites;
   }
 }
@@ -668,15 +669,19 @@ function drawHand() {
 
 function timerDisplay() {
   if (oldTimer < timer) oldTimer++;
-  else {
-    oldTimer = timer;
+  else if (oldTimer > timer + 1) {
+    oldTimer -= 1;
   }
 
   push();
   fill(120, 190, 74);
   textSize(30);
   textAlign(LEFT);
-  text("TIME-" + Math.floor(oldTimer) + "s", width * 0.7, height * 0.05);
+  text(
+    "TIME-" + Math.floor(Math.max(oldTimer, 0)) + "s",
+    width * 0.7,
+    height * 0.05
+  );
   pop();
 }
 function pointsDisplay() {
