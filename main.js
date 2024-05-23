@@ -46,7 +46,7 @@ function preload() {
   //Mole hole parts
   holeTextures = [
     loadImage("./hole/HoleBack.webp"),
-     loadImage("./hole/Front.webp"),
+    loadImage("./hole/HoleFront.webp"),
   ];
 
   //Enemies basic
