@@ -650,12 +650,6 @@ class Empty extends Square {
   }
 }
 
-// function InputTracker() {
-//   if (mouseIsPressed && mouseState !== "click") {
-//     mouseState = "click";
-//   }
-// }
-
 function mousePressTracker() {
   if (mouseWasPressed && !mouseIsPressed) {
     mouseWasPressed = false;
