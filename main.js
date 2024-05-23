@@ -4,12 +4,14 @@ let mouseWasPressed = false;
 
 let units = [];
 const unitCount = 15;
+//Old and displayscore used for making counters tick up incrementally
 let timer = 60;
 let oldTimer = timer;
 let points = 0;
 let oldPoints = 0;
 let displayScore = 0;
 
+//textures
 let logo;
 let startBackground;
 let levelBackground;
@@ -174,6 +176,27 @@ function drawStartScreen() {
     ((Math.max(width, height) / 3) * logo.height) / logo.width
   );
 
+  if (startButton.listen()) {
+    gameState = "game";
+  }
+  startButton.draw();
+}
+
+function drawInstructions() {
+  textSize(width / 100 + height / 100);
+  fill(124, 77, 46);
+  text(
+    "Press shift and click to pet cute hamsters",
+    width * 0.5,
+    height * 0.77
+  );
+  text("Click to attack evil rats", width * 0.5, height * 0.91);
+
+  drawStartHamsters();
+}
+
+//Draw the hamsters that go along with the text
+function drawStartHamsters() {
   //display cute hamsters
   image(basicAnimalSprites[1], width / 2 + 60, height / 1.4);
   image(basicAnimalSprites[2], width / 2 - 60, height / 1.4);
@@ -185,19 +208,6 @@ function drawStartScreen() {
   image(basicEnemySprites[3], width / 2 - 20, height / 1.18);
   image(vikingEnemySprites[0], width / 2 + 20, height / 1.18);
   image(vikingEnemySprites[1], width / 2 - 60, height / 1.18);
-  textSize(width / 100 + height / 100);
-  fill(124, 77, 46);
-  text(
-    "Press shift and click to pet cute hamsters",
-    width * 0.5,
-    height * 0.77
-  );
-  text("Click to attack evil rats", width * 0.5, height * 0.91);
-
-  if (startButton.listen()) {
-    gameState = "game";
-  }
-  startButton.draw();
 }
 
 function drawGameOverScreen() {
@@ -241,6 +251,7 @@ function drawGameOverScreen() {
 function drawSpriteRow() {
   const spriteW = basicAnimalSprites[0].width * 2;
   const spriteH = basicAnimalSprites[0].height * 2;
+  //Little larger than sprite, easy to place using code below
   const spacing = spriteW * 1.2 - 21.5;
 
   //display gameover animals
@@ -394,7 +405,7 @@ class Button extends ClickBox {
   }
 }
 
-//Unsure whether to call Unit or frenemies since its friends and enemies
+//Separate class so the hole is draw for empty units aswell
 class Square extends ClickBox {
   constructor(index) {
     super();
@@ -435,6 +446,7 @@ class Square extends ClickBox {
   }
 }
 
+//expand on square with logic for units lick health points etc
 class Unit extends Square {
   constructor(index) {
     super(index);
@@ -553,6 +565,7 @@ class Unit extends Square {
   }
 }
 
+//Separate for animals and enemies since some they do slightly different things
 class Animal extends Unit {
   constructor(index) {
     super(index);
@@ -601,8 +614,8 @@ class GreenAnimal extends Animal {
 }
 
 class Enemy extends Unit {
-  constructor(index, health, lifetime, pointsReward, timeReward) {
-    super(index, health, lifetime, pointsReward, timeReward);
+  constructor(index) {
+    super(index);
   }
 }
 
