@@ -9,7 +9,7 @@ let timer = 30;
 let points = 0;
 
 let img;
-let grassBackground;
+let levelBackground;
 let gameTitle;
 
 let defaultHand;
@@ -24,8 +24,7 @@ let greenAnimalSprites;
 let richAnimalSprites;
 
 function preload() {
-  grassBackground = loadImage("./background/grassbackground.webp");
-  skyBackground = loadImage("./background/skybackground.webp");
+  levelBackground = loadImage("./background/backgroundgame.webp");
 
   //Load hands
   gameTitle = loadFont("/fonts/gameTitle.ttf");
@@ -122,21 +121,18 @@ function draw() {
       break;
     case "game":
       //CHATGPT helped with the coodrinates to get the grass to fit the way I wanted it to
-      image(
-        grassBackground,
-        width / 2,
-        height - (grassBackground.height * (width / grassBackground.width)) / 2,
-        width,
-        grassBackground.height * (width / grassBackground.width)
-      );
-
-      image(
-        skyBackground,
-        width / 2,
-        (grassBackground.height * (width / grassBackground.width)) / 2,
-        width,
-        grassBackground.height * (width / grassBackground.width)
-      );
+      push();
+      imageMode(CORNER);
+      background(130, 203, 84);
+      image(levelBackground, 0, 0 - 1.5 * height, width, width);
+      pop();
+      // image(
+      //   skyBackground,
+      //   width / 2,
+      //   (grassBackground.height * (width / grassBackground.width)) / 2,
+      //   width,
+      //   grassBackground.height * (width / grassBackground.width)
+      // );
 
       drawHeadsUpDisplay();
 
@@ -548,7 +544,7 @@ function drawHand() {
 
 function timerCount() {
   push();
-  fill(220, 100, 220);
+  fill(120, 190, 74);
   textSize(30);
   textAlign(LEFT);
   text("TIMER − " + Math.floor(timer) + "s", width * 0.7, height * 0.05);
@@ -556,7 +552,7 @@ function timerCount() {
 }
 function pointsCount() {
   push();
-  fill(220, 100, 220);
+  fill(120, 190, 74);
   textSize(30);
   textAlign(RIGHT);
   text("Points − " + points, width * 0.3, height * 0.05);
